@@ -100,6 +100,55 @@ const AdminAPI = {
     method: "PATCH", body: JSON.stringify({ role }),
   }),
 };
+function showLogoutModal() {
+  let modal = document.getElementById("logout-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "logout-modal";
+    modal.className = "modal-overlay";
+    modal.innerHTML = `
+      <div class="modal-box">
+        <button class="modal-close" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div class="logout-modal-icon">👋</div>
+        <h3 class="logout-modal-title">Leaving So Soon?</h3>
+        <p class="logout-modal-msg">Are you sure you want to log out of ShopLite? We'll miss you!</p>
+        <div class="logout-modal-actions">
+          <button class="btn-cancel">Stay Connected</button>
+          <button class="btn-confirm-logout">Yes, Log Out</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const closeBtn = modal.querySelector(".modal-close");
+    const cancelBtn = modal.querySelector(".btn-cancel");
+    const confirmBtn = modal.querySelector(".btn-confirm-logout");
+
+    const closeModal = () => {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+    };
+
+    closeBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    confirmBtn.addEventListener("click", () => {
+      AuthAPI.logout();
+    });
+  }
+
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const loginLink = document.querySelector('a[href="auth.html"]');
   if (Auth.isLoggedIn()) {
@@ -113,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loginLink.title = "Click to log out";
       loginLink.addEventListener("click", e => {
         e.preventDefault();
-        if (confirm("Are you sure you want to log out of ShopLite? We'll miss you! 🤝")) AuthAPI.logout();
+        showLogoutModal();
       });
     }
 

@@ -821,6 +821,73 @@ textarea.form-control {
   margin-bottom: 1rem;
 }
 
+/* --- Logout Confirmation Modal --- */
+#logout-modal .modal-box {
+  max-width: 420px;
+  text-align: center;
+  padding: 2.5rem 2rem 2rem;
+}
+.logout-modal-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.25rem;
+  background: rgba(245, 166, 35, 0.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+}
+.logout-modal-title {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--clr-white);
+  margin-bottom: 0.5rem;
+}
+.logout-modal-msg {
+  color: var(--clr-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+.logout-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+.logout-modal-actions .btn-cancel {
+  flex: 1;
+  padding: 0.7rem 1.25rem;
+  background: var(--clr-surface2);
+  color: var(--clr-text);
+  border: 1px solid var(--clr-border);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+}
+.logout-modal-actions .btn-cancel:hover {
+  background: var(--clr-bg2);
+  border-color: var(--clr-text-muted);
+}
+.logout-modal-actions .btn-confirm-logout {
+  flex: 1;
+  padding: 0.7rem 1.25rem;
+  background: var(--clr-error);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+}
+.logout-modal-actions .btn-confirm-logout:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+}
+
 /* =============================================
    HOME PAGE SPECIFIC
    ============================================= */
