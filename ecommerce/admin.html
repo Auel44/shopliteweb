@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Portal — ShopLite</title>
+  <style>
+    /* ── Reset & Variables ───────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f1117;
+      --bg2:       #1a1d27;
+      --surface:   #22263a;
+      --border:    #2e3350;
+      --accent:    #6c63ff;
+      --accent2:   #ff6584;
+      --green:     #22c55e;
+      --yellow:    #eab308;
+      --red:       #ef4444;
+      --text:      #e8eaf0;
+      --muted:     #7c82a0;
+      --radius:    10px;
+      --sidebar-w: 220px;
+      --font:      'Segoe UI', system-ui, sans-serif;
+    }
+
+    body { font-family: var(--font); background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w); background: var(--bg2);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
+    }
+    .sidebar-brand {
+      padding: 1.4rem 1.25rem 1rem;
+      font-size: 1.2rem; font-weight: 800; color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-brand span { color: var(--accent); }
+    .sidebar-brand small { display: block; font-size: 0.72rem; font-weight: 400; color: var(--muted); margin-top: 0.15rem; }
+
+    .sidebar-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+    .nav-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.65rem 1.25rem; cursor: pointer;
+      color: var(--muted); font-size: 0.88rem; font-weight: 500;
+      transition: all 0.18s; border-left: 3px solid transparent;
+      user-select: none;
+    }
+    .nav-item:hover  { color: var(--text); background: rgba(108,99,255,.08); }
+    .nav-item.active { color: var(--accent); background: rgba(108,99,255,.12); border-left-color: var(--accent); }
+    .nav-item .icon  { font-size: 1.1rem; width: 20px; text-align: center; }
+    .badge-pill { margin-left: auto; background: var(--red); color:#fff; font-size:.7rem; border-radius:99px; padding:.1rem .45rem; }
+
+    .sidebar-footer {
+      padding: 1rem 1.25rem; border-top: 1px solid var(--border);
+      font-size: 0.8rem; color: var(--muted);
+    }
+    .sidebar-footer strong { display: block; color: var(--text); margin-bottom: .15rem; }
+    .logout-btn {
+      margin-top: .5rem; width: 100%; padding: .45rem;
+      background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3);
+      color: var(--red); border-radius: 6px; cursor: pointer; font-size: .82rem;
+      transition: background .18s;
+    }
+    .logout-btn:hover { background: rgba(239,68,68,.25); }
+
+    /* ── Main ───────────────────────────────────────────── */
+    .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+
+    .topbar {
+      padding: 1rem 1.75rem; background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar h1 { font-size: 1.15rem; font-weight: 700; }
+    .topbar-right { display: flex; align-items: center; gap: .75rem; font-size: .85rem; color: var(--muted); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
+
+    .content { padding: 1.75rem; flex: 1; }
+
+    /* ── Tabs ───────────────────────────────────────────── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Stat cards ─────────────────────────────────────── */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: 1rem; margin-bottom: 1.75rem; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem;
+    }
+    .stat-card .sc-label { font-size: .78rem; color: var(--muted); margin-bottom: .35rem; text-transform: uppercase; letter-spacing: .04em; }
+    .stat-card .sc-value { font-size: 1.6rem; font-weight: 800; }
+    .stat-card .sc-sub   { font-size: .75rem; color: var(--muted); margin-top: .25rem; }
+    .sc-green { color: var(--green); }
+    .sc-yellow{ color: var(--yellow); }
+    .sc-red   { color: var(--red); }
+    .sc-accent{ color: var(--accent); }
+
+    /* ── Tables ─────────────────────────────────────────── */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
+    .card-header { padding: .85rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .card-header h3 { font-size: .95rem; font-weight: 700; }
+    .card-body { padding: 1.25rem; }
+
+    .tbl-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    th { padding: .6rem 1rem; text-align: left; color: var(--muted); font-weight: 600; font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid var(--border); }
+    td { padding: .7rem 1rem; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+
+    /* ── Badges ─────────────────────────────────────────── */
+    .badge {
+      display: inline-block; padding: .2rem .55rem; border-radius: 99px;
+      font-size: .72rem; font-weight: 600; text-transform: capitalize;
+    }
+    .badge-pending    { background:rgba(234,179,8,.15);  color:var(--yellow); }
+    .badge-processing { background:rgba(108,99,255,.15); color:var(--accent); }
+    .badge-shipped    { background:rgba(59,130,246,.15); color:#60a5fa; }
+    .badge-delivered  { background:rgba(34,197,94,.15);  color:var(--green); }
+    .badge-cancelled  { background:rgba(239,68,68,.15);  color:var(--red); }
+    .badge-admin      { background:rgba(108,99,255,.2);  color:var(--accent); }
+    .badge-customer   { background:rgba(124,130,160,.15);color:var(--muted); }
+    .badge-unread     { background:rgba(239,68,68,.15);  color:var(--red); }
+    .badge-read       { background:rgba(34,197,94,.12);  color:var(--green); }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.42rem .9rem; border-radius:6px; border:none; cursor:pointer; font-size:.8rem; font-weight:600; transition:all .18s; }
+    .btn-primary   { background:var(--accent);  color:#fff; }
+    .btn-primary:hover { opacity:.85; }
+    .btn-danger    { background:rgba(239,68,68,.15); color:var(--red); border:1px solid rgba(239,68,68,.3); }
+    .btn-danger:hover { background:rgba(239,68,68,.25); }
+    .btn-ghost     { background:rgba(255,255,255,.06); color:var(--muted); }
+    .btn-ghost:hover { color:var(--text); background:rgba(255,255,255,.1); }
+    .btn-sm { padding:.28rem .65rem; font-size:.75rem; }
+
+    /* ── Form controls ───────────────────────────────────── */
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .form-group { display:flex; flex-direction:column; gap:.35rem; margin-bottom:.9rem; }
+    label { font-size:.8rem; color:var(--muted); font-weight:500; }
+    .form-control {
+      background:var(--bg); border:1px solid var(--border);
+      color:var(--text); border-radius:7px; padding:.55rem .85rem;
+      font-size:.87rem; outline:none; transition:border .18s; width:100%;
+    }
+    .form-control:focus { border-color:var(--accent); }
+    select.form-control option { background:var(--bg2); }
+
+    /* ── Search bar ──────────────────────────────────────── */
+    .search-bar { position:relative; }
+    .search-bar input { padding-left:2.2rem; }
+    .search-bar::before { content:"🔍"; position:absolute; left:.7rem; top:50%; transform:translateY(-50%); font-size:.85rem; }
+
+    /* ── Modal ───────────────────────────────────────────── */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:200; backdrop-filter:blur(4px); }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:2rem; width:min(520px,92vw); max-height:90vh; overflow-y:auto; }
+    .modal-box h2 { font-size:1.1rem; margin-bottom:1.25rem; }
+    .modal-actions { display:flex; gap:.75rem; justify-content:flex-end; margin-top:1.25rem; }
+
+    /* ── Toast ───────────────────────────────────────────── */
+    #toast-container { position:fixed; bottom:1.5rem; right:1.5rem; z-index:999; display:flex; flex-direction:column; gap:.5rem; }
+    .toast { background:var(--surface); border:1px solid var(--border); color:var(--text); padding:.7rem 1.1rem; border-radius:8px; font-size:.85rem; transform:translateX(120%); transition:transform .3s; max-width:320px; }
+    .toast.show { transform:translateX(0); }
+    .toast-success { border-color:var(--green); }
+    .toast-error   { border-color:var(--red); }
+
+    /* ── Misc ────────────────────────────────────────────── */
+    .empty-state { text-align:center; padding:3rem; color:var(--muted); }
+    .empty-state .es-icon { font-size:2.5rem; margin-bottom:.75rem; }
+    .loading { text-align:center; padding:2.5rem; color:var(--muted); font-size:.9rem; }
+    .top-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem; }
+    @media(max-width:768px){ .top-grid{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;} }
+
+    /* ── Guard overlay ───────────────────────────────────── */
+    #auth-guard { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:999; flex-direction:column; gap:1rem; text-align:center; }
+    #auth-guard h2 { color:var(--red); }
+    #auth-guard p  { color:var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- Auth guard shown until JS verifies admin -->
+<div id="auth-guard">
+  <div style="font-size:2.5rem">🔒</div>
+  <h2>Access Restricted</h2>
+  <p>Checking credentials…</p>
+  <a href="auth.html" style="color:var(--accent);text-decoration:none;font-size:.9rem">→ Go to Login</a>
+</div>
+
+<!-- ── Sidebar ─────────────────────────────────────────── -->
+<aside class="sidebar" id="sidebar" style="display:none">
+  <div class="sidebar-brand">
+    Shop<span>Lite</span> <small>Admin Portal</small>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-tab="dashboard"><span class="icon">📊</span> Dashboard</div>
+    <div class="nav-item" data-tab="products"><span class="icon">📦</span> Products</div>
+    <div class="nav-item" data-tab="orders"><span class="icon">🛍️</span> Orders</div>
+    <div class="nav-item" data-tab="messages"><span class="icon">✉️</span> Messages <span class="badge-pill" id="unread-badge" style="display:none">0</span></div>
+    <div class="nav-item" data-tab="users"><span class="icon">👥</span> Users</div>
+  </nav>
+  <div class="sidebar-footer">
+    <strong id="admin-name">Admin</strong>
+    <span id="admin-email" style="font-size:.75rem"></span>
+    <button class="logout-btn" onclick="doLogout()">🚪 Log Out</button>
+  </div>
+</aside>
+
+<!-- ── Main ────────────────────────────────────────────── -->
+<div class="main" id="main-content" style="display:none">
+  <div class="topbar">
+    <h1 id="topbar-title">Dashboard</h1>
+    <div class="topbar-right">
+      <span class="status-dot"></span> API Connected &nbsp;|&nbsp;
+      <span id="topbar-time"></span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══════════════════════════════════════ -->
+    <div class="tab-panel active" id="tab-dashboard">
+      <div class="stats-grid" id="stats-grid">
+        <div class="loading">Loading stats…</div>
+      </div>
+      <div class="top-grid">
+        <div class="card">
+          <div class="card-header"><h3>📋 Recent Orders</h3></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Ref</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+              <tbody id="recent-orders-tbody"><tr><td colspan="4" class="loading">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>🏆 Top Products</h3></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Product</th><th>Units Sold</th></tr></thead>
+              <tbody id="top-products-tbody"><tr><td colspan="3" class="loading">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PRODUCTS ════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-products">
+      <div class="card">
+        <div class="card-header">
+          <h3>All Products</h3>
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+            <div class="search-bar"><input class="form-control" id="prod-search" placeholder="Search…" style="width:200px" oninput="filterProducts()"></div>
+            <button class="btn btn-primary" onclick="openProductModal()">＋ Add Product</button>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Actions</th></tr></thead>
+            <tbody id="products-tbody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ORDERS ══════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-orders">
+      <div class="card">
+        <div class="card-header">
+          <h3>All Orders</h3>
+          <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+            <select class="form-control" id="order-status-filter" onchange="loadOrders()" style="width:150px">
+              <option value="">All Statuses</option>
+              <option>pending</option><option>processing</option>
+              <option>shipped</option><option>delivered</option><option>cancelled</option>
+            </select>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Ref</th><th>Customer</th><th>Email</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody id="orders-tbody"><tr><td colspan="7" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MESSAGES ════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-messages">
+      <div class="card">
+        <div class="card-header">
+          <h3>Contact Messages</h3>
+          <div style="display:flex;gap:.75rem">
+            <select class="form-control" id="msg-filter" onchange="loadMessages()" style="width:140px">
+              <option value="">All</option>
+              <option value="false">Unread</option>
+              <option value="true">Read</option>
+            </select>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="messages-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ USERS ═══════════════════════════════════════════ -->
+    <div class="tab-panel" id="tab-users">
+      <div class="card">
+        <div class="card-header">
+          <h3>All Users</h3>
+          <div class="search-bar"><input class="form-control" id="user-search" placeholder="Search…" style="width:220px" oninput="loadUsers()"></div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Action</th></tr></thead>
+            <tbody id="users-tbody"><tr><td colspan="6" class="loading">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ── Product Modal ──────────────────────────────────── -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal-box">
+    <h2 id="prod-modal-title">Add Product</h2>
+    <input type="hidden" id="prod-id">
+    <div class="form-row">
+      <div class="form-group"><label>Name *</label><input class="form-control" id="p-name" placeholder="Product name"></div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select class="form-control" id="p-cat">
+          <option value="">Select…</option>
+          <option value="electronics">Electronics</option><option value="clothing">Clothing</option>
+          <option value="home">Home</option><option value="accessories">Accessories</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Price (₵) *</label><input class="form-control" id="p-price" type="number" step="0.01" min="0"></div>
+      <div class="form-group"><label>Original Price (₵)</label><input class="form-control" id="p-original" type="number" step="0.01" min="0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Stock *</label><input class="form-control" id="p-stock" type="number" min="0"></div>
+      <div class="form-group"><label>Image path</label><input class="form-control" id="p-image" placeholder="images/product.jpg"></div>
+    </div>
+    <div class="form-group"><label>Description</label><textarea class="form-control" id="p-desc" rows="3" placeholder="Product description…"></textarea></div>
+    <div class="form-group" style="flex-direction:row;align-items:center;gap:.5rem">
+      <input type="checkbox" id="p-featured" style="width:16px;height:16px;cursor:pointer">
+      <label for="p-featured" style="cursor:pointer;margin-bottom:0">Featured product</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeProductModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Message Detail Modal ───────────────────────────── -->
+<div class="modal-overlay" id="msg-modal">
+  <div class="modal-box">
+    <h2>📨 Message Detail</h2>
+    <div style="margin-bottom:1rem;color:var(--muted);font-size:.85rem">
+      <div><strong style="color:var(--text)" id="msg-from"></strong> — <span id="msg-email2"></span></div>
+      <div style="margin-top:.25rem" id="msg-date2"></div>
+    </div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:.88rem;line-height:1.7;white-space:pre-wrap" id="msg-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeMsgModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ──────────────────────────────────────────── -->
+<div id="toast-container"></div>
+
+<script>
+/* ── Globals ─────────────────────────────────────────── */
+const API = "https://shoplite-backend-rxpn.onrender.com/api";
+let allProducts = [];
+let currentUser = null;
+
+/* ── Auth guard ──────────────────────────────────────── */
+(function() {
+  const token = localStorage.getItem("sl_token");
+  const user  = JSON.parse(localStorage.getItem("sl_user") || "null");
+  if (!token || !user || user.role !== "admin") {
+    document.getElementById("auth-guard").querySelector("p").textContent =
+      "You must be logged in as an admin.";
+    return;
+  }
+  currentUser = user;
+  document.getElementById("auth-guard").style.display = "none";
+  document.getElementById("sidebar").style.display    = "flex";
+  document.getElementById("main-content").style.display = "flex";
+  document.getElementById("admin-name").textContent  = user.username;
+  document.getElementById("admin-email").textContent = user.email;
+  initAdmin();
+})();
+
+/* ── Core fetch ──────────────────────────────────────── */
+async function api(path, opts = {}) {
+  const token = localStorage.getItem("sl_token");
+  const res   = await fetch(API + path, {
+    ...opts,
+    headers: { "Content-Type":"application/json", "Authorization":`Bearer ${token}`, ...(opts.headers||{}) }
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Error");
+  return data;
+}
+
+/* ── Init ────────────────────────────────────────────── */
+function initAdmin() {
+  setupNav();
+  updateClock();
+  setInterval(updateClock, 30000);
+  loadDashboard();
+}
+
+function updateClock() {
+  document.getElementById("topbar-time").textContent =
+    new Date().toLocaleString("en-GB", { dateStyle:"medium", timeStyle:"short" });
+}
+
+/* ── Sidebar nav ─────────────────────────────────────── */
+const tabTitles = { dashboard:"Dashboard", products:"Products", orders:"Orders", messages:"Messages", users:"Users" };
+function setupNav() {
+  document.querySelectorAll(".nav-item").forEach(item => {
+    item.addEventListener("click", () => switchTab(item.dataset.tab));
+  });
+}
+function switchTab(tab) {
+  document.querySelectorAll(".nav-item").forEach(i => i.classList.toggle("active", i.dataset.tab===tab));
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("active", p.id==="tab-"+tab));
+  document.getElementById("topbar-title").textContent = tabTitles[tab] || tab;
+  if (tab==="products") loadProducts();
+  if (tab==="orders")   loadOrders();
+  if (tab==="messages") loadMessages();
+  if (tab==="users")    loadUsers();
+}
+
+/* ── Toast ───────────────────────────────────────────── */
+function toast(msg, type="success") {
+  const c = document.getElementById("toast-container");
+  const t = document.createElement("div");
+  t.className = `toast toast-${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  requestAnimationFrame(() => t.classList.add("show"));
+  setTimeout(() => { t.classList.remove("show"); setTimeout(()=>t.remove(),350); }, 3200);
+}
+
+function fmt(v) { return `₵${parseFloat(v).toFixed(2)}`; }
+function fmtDate(d) { return new Date(d).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}); }
+function statusBadge(s) { return `<span class="badge badge-${s}">${s}</span>`; }
+
+/* ══ DASHBOARD ══════════════════════════════════════════ */
+async function loadDashboard() {
+  try {
+    const d = await api("/admin/stats");
+    const s = d.stats;
+
+    document.getElementById("stats-grid").innerHTML = `
+      <div class="stat-card"><div class="sc-label">Total Revenue</div><div class="sc-value sc-green">${fmt(s.totalRevenue)}</div><div class="sc-sub">Confirmed orders</div></div>
+      <div class="stat-card"><div class="sc-label">Total Orders</div><div class="sc-value sc-accent">${s.totalOrders}</div><div class="sc-sub">All time</div></div>
+      <div class="stat-card"><div class="sc-label">Customers</div><div class="sc-value">${s.totalUsers}</div><div class="sc-sub">Registered users</div></div>
+      <div class="stat-card"><div class="sc-label">Products</div><div class="sc-value">${s.totalProducts}</div><div class="sc-sub">In catalogue</div></div>
+      <div class="stat-card"><div class="sc-label">Unread Messages</div><div class="sc-value sc-yellow">${s.unreadMessages}</div><div class="sc-sub">Contact inbox</div></div>
+      <div class="stat-card"><div class="sc-label">Low Stock</div><div class="sc-value sc-red">${s.lowStock}</div><div class="sc-sub">≤ 5 units left</div></div>
+    `;
+
+    // Unread badge on sidebar
+    if (s.unreadMessages > 0) {
+      const b = document.getElementById("unread-badge");
+      b.textContent = s.unreadMessages; b.style.display = "";
+    }
+
+    document.getElementById("recent-orders-tbody").innerHTML =
+      d.recentOrders.length
+        ? d.recentOrders.map(o => `<tr>
+            <td><code style="color:var(--accent);font-size:.78rem">${o.order_ref}</code></td>
+            <td>${o.full_name}</td>
+            <td>${fmt(o.total)}</td>
+            <td>${statusBadge(o.status)}</td>
+          </tr>`).join("")
+        : `<tr><td colspan="4" class="empty-state">No orders yet</td></tr>`;
+
+    document.getElementById("top-products-tbody").innerHTML =
+      d.topProducts.length
+        ? d.topProducts.map((p,i) => `<tr>
+            <td style="color:var(--muted)">${i+1}</td>
+            <td>${p.name}</td>
+            <td style="color:var(--green);font-weight:700">${p.sold}</td>
+          </tr>`).join("")
+        : `<tr><td colspan="3" class="empty-state">No sales yet</td></tr>`;
+
+  } catch(e) { toast("Failed to load dashboard: " + e.message, "error"); }
+}
+
+/* ══ PRODUCTS ═══════════════════════════════════════════ */
+async function loadProducts() {
+  document.getElementById("products-tbody").innerHTML = `<tr><td colspan="7" class="loading">Loading…</td></tr>`;
+  try {
+    const d = await api("/products");
+    allProducts = d.products;
+    renderProducts(allProducts);
+  } catch(e) { toast("Failed to load products", "error"); }
+}
+
+function filterProducts() {
+  const q = document.getElementById("prod-search").value.toLowerCase();
+  renderProducts(allProducts.filter(p =>
+    p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+  ));
+}
+
+function renderProducts(list) {
+  document.getElementById("products-tbody").innerHTML = list.length
+    ? list.map(p => `<tr>
+        <td style="color:var(--muted)">#${p.id}</td>
+        <td><strong>${p.name}</strong></td>
+        <td><span class="badge badge-processing">${p.category}</span></td>
+        <td>${fmt(p.price)}</td>
+        <td style="color:${p.stock<=5?'var(--red)':p.stock<=15?'var(--yellow)':'var(--green)'}">${p.stock}</td>
+        <td>${p.featured ? "⭐" : "—"}</td>
+        <td style="display:flex;gap:.4rem">
+          <button class="btn btn-ghost btn-sm" onclick='openProductModal(${JSON.stringify(p)})'>✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">🗑️</button>
+        </td>
+      </tr>`).join("")
+    : `<tr><td colspan="7"><div class="empty-state"><div class="es-icon">📦</div>No products found</div></td></tr>`;
+}
+
+function openProductModal(p = null) {
+  document.getElementById("prod-modal-title").textContent = p ? "Edit Product" : "Add Product";
+  document.getElementById("prod-id").value       = p?.id || "";
+  document.getElementById("p-name").value        = p?.name || "";
+  document.getElementById("p-cat").value         = p?.category || "";
+  document.getElementById("p-price").value       = p?.price || "";
+  document.getElementById("p-original").value    = p?.original_price || "";
+  document.getElementById("p-stock").value       = p?.stock ?? "";
+  document.getElementById("p-image").value       = p?.image || "";
+  document.getElementById("p-desc").value        = p?.description || "";
+  document.getElementById("p-featured").checked  = !!p?.featured;
+  document.getElementById("product-modal").classList.add("open");
+}
+function closeProductModal() { document.getElementById("product-modal").classList.remove("open"); }
+
+async function saveProduct() {
+  const id   = document.getElementById("prod-id").value;
+  const body = {
+    name:           document.getElementById("p-name").value.trim(),
+    category:       document.getElementById("p-cat").value,
+    price:          parseFloat(document.getElementById("p-price").value),
+    original_price: parseFloat(document.getElementById("p-original").value) || null,
+    stock:          parseInt(document.getElementById("p-stock").value),
+    image:          document.getElementById("p-image").value.trim() || "images/placeholder.jpg",
+    description:    document.getElementById("p-desc").value.trim(),
+    featured:       document.getElementById("p-featured").checked ? 1 : 0,
+  };
+  if (!body.name || !body.category || isNaN(body.price) || isNaN(body.stock)) {
+    return toast("Fill in all required fields.", "error");
+  }
+  try {
+    if (id) { await api(`/products/${id}`, { method:"PUT",  body: JSON.stringify(body) }); toast("Product updated ✅"); }
+    else     { await api("/products",        { method:"POST", body: JSON.stringify(body) }); toast("Product created ✅"); }
+    closeProductModal(); loadProducts();
+  } catch(e) { toast(e.message, "error"); }
+}
+
+async function deleteProduct(id) {
+  if (!confirm("Delete this product? This cannot be undone.")) return;
+  try { await api(`/products/${id}`, { method:"DELETE" }); toast("Product deleted"); loadProducts(); }
+  catch(e) { toast(e.message, "error"); }
+}
+
+/* ══ ORDERS ═════════════════════════════════════════════ */
+async function loadOrders() {
+  document.getElementById("orders-tbody").innerHTML = `<tr><td colspan="7" class="loading">Loading…</td></tr>`;
+  const status = document.getElementById("order-status-filter").value;
+  const qs = status ? `status=${status}` : "";
+  try {
+    const d = await api(`/orders/all${qs?"?"+qs:""}`);
+    document.getElementById("orders-tbody").innerHTML = d.orders.length
+      ? d.orders.map(o => `<tr>
+          <td><code style="color:var(--accent);font-size:.78rem">${o.order_ref}</code></td>
+          <td>${o.full_name}</td>
+          <td style="color:var(--muted)">${o.email}</td>
+          <td>${fmt(o.total)}</td>
+          <td>${statusBadge(o.status)}</td>
+          <td style="color:var(--muted)">${fmtDate(o.created_at)}</td>
+          <td>
+            <select class="form-control" style="width:130px;padding:.3rem .5rem;font-size:.78rem"
+              onchange="updateOrderStatus(${o.id}, this.value)" >
+              ${["pending","processing","shipped","delivered","cancelled"].map(s =>
+                `<option value="${s}" ${o.status===s?"selected":""}>${s}</option>`
+              ).join("")}
+            </select>
+          </td>
+        </tr>`).join("")
+      : `<tr><td colspan="7"><div class="empty-state"><div class="es-icon">🛍️</div>No orders found</div></td></tr>`;
+  } catch(e) { toast("Failed to load orders", "error"); }
+}
+
+async function updateOrderStatus(id, status) {
+  try { await api(`/orders/${id}/status`, { method:"PATCH", body: JSON.stringify({status}) }); toast(`Order marked as ${status} ✅`); }
+  catch(e) { toast(e.message, "error"); loadOrders(); }
+}
+
+/* ══ MESSAGES ═══════════════════════════════════════════ */
+async function loadMessages() {
+  document.getElementById("messages-tbody").innerHTML = `<tr><td colspan="6" class="loading">Loading…</td></tr>`;
+  const filter  = document.getElementById("msg-filter").value;
+  const qs = filter !== "" ? `is_read=${filter}` : "";
+  try {
+    const d = await api(`/contact${qs?"?"+qs:""}`);
+    const b = document.getElementById("unread-badge");
+    if (d.unread > 0) { b.textContent = d.unread; b.style.display = ""; }
+    else b.style.display = "none";
+
+    document.getElementById("messages-tbody").innerHTML = d.messages.length
+      ? d.messages.map(m => `<tr style="${!m.is_read?'font-weight:600':'opacity:.75'}">
+          <td>${m.full_name}</td>
+          <td style="color:var(--muted)">${m.email}</td>
+          <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.subject}</td>
+          <td style="color:var(--muted)">${fmtDate(m.created_at)}</td>
+          <td><span class="badge ${m.is_read?'badge-read':'badge-unread'}">${m.is_read?'Read':'Unread'}</span></td>
+          <td style="display:flex;gap:.4rem">
+            <button class="btn btn-ghost btn-sm" onclick="viewMessage(${m.id},'${encodeURIComponent(m.full_name)}','${encodeURIComponent(m.email)}','${encodeURIComponent(m.subject)}','${encodeURIComponent(m.message)}','${m.created_at}')">👁️ View</button>
+            ${!m.is_read?`<button class="btn btn-ghost btn-sm" onclick="markRead(${m.id})">✅</button>`:''}
+            <button class="btn btn-danger btn-sm" onclick="deleteMsg(${m.id})">🗑️</button>
+          </td>
+        </tr>`).join("")
+      : `<tr><td colspan="6"><div class="empty-state"><div class="es-icon">✉️</div>No messages</div></td></tr>`;
+  } catch(e) { toast("Failed to load messages", "error"); }
+}
+
+function viewMessage(id, name, email, subject, body, date) {
+  document.getElementById("msg-from").textContent  = decodeURIComponent(name);
+  document.getElementById("msg-email2").textContent = decodeURIComponent(email);
+  document.getElementById("msg-date2").textContent  = fmtDate(date);
+  document.getElementById("msg-body").textContent   =
+    `Subject: ${decodeURIComponent(subject)}\n\n${decodeURIComponent(body)}`;
+  document.getElementById("msg-modal").classList.add("open");
+  markRead(id);
+}
+function closeMsgModal() { document.getElementById("msg-modal").classList.remove("open"); }
+
+async function markRead(id) {
+  try { await api(`/contact/${id}/read`, { method:"PATCH" }); loadMessages(); }
+  catch(e) {}
+}
+async function deleteMsg(id) {
+  if (!confirm("Delete this message?")) return;
+  try { await api(`/contact/${id}`, { method:"DELETE" }); toast("Message deleted"); loadMessages(); }
+  catch(e) { toast(e.message, "error"); }
+}
+
+/* ══ USERS ══════════════════════════════════════════════ */
+async function loadUsers() {
+  document.getElementById("users-tbody").innerHTML = `<tr><td colspan="6" class="loading">Loading…</td></tr>`;
+  const search = document.getElementById("user-search").value;
+  const qs = search ? `search=${encodeURIComponent(search)}` : "";
+  try {
+    const d = await api(`/admin/users${qs?"?"+qs:""}`);
+    document.getElementById("users-tbody").innerHTML = d.users.length
+      ? d.users.map(u => `<tr>
+          <td style="color:var(--muted)">#${u.id}</td>
+          <td><strong>${u.username}</strong></td>
+          <td style="color:var(--muted)">${u.email}</td>
+          <td><span class="badge badge-${u.role}">${u.role}</span></td>
+          <td style="color:var(--muted)">${fmtDate(u.created_at)}</td>
+          <td>
+            ${u.id !== currentUser.id
+              ? `<button class="btn btn-ghost btn-sm" onclick="toggleRole(${u.id},'${u.role}')">
+                  ${u.role==='admin'?'↓ Make Customer':'↑ Make Admin'}
+                </button>`
+              : '<span style="color:var(--muted);font-size:.78rem">You</span>'}
+          </td>
+        </tr>`).join("")
+      : `<tr><td colspan="6"><div class="empty-state"><div class="es-icon">👥</div>No users found</div></td></tr>`;
+  } catch(e) { toast("Failed to load users", "error"); }
+}
+
+async function toggleRole(id, currentRole) {
+  const newRole = currentRole === "admin" ? "customer" : "admin";
+  if (!confirm(`Change this user's role to ${newRole}?`)) return;
+  try { await api(`/admin/users/${id}/role`, { method:"PATCH", body: JSON.stringify({role:newRole}) }); toast(`Role updated to ${newRole} ✅`); loadUsers(); }
+  catch(e) { toast(e.message, "error"); }
+}
+
+/* ── Logout ──────────────────────────────────────────── */
+function doLogout() {
+  if (confirm("Log out of admin portal?")) {
+    ["sl_token","sl_user","shopLiteSession"].forEach(k => localStorage.removeItem(k));
+    window.location.href = "auth.html";
+  }
+}
+</script>
+</body>
+</html>

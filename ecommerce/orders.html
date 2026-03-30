@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShopLite — My Orders. View your order history and track your current status.">
+  <title>My Orders — ShopLite</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Specific styles for Orders Page */
+    .orders-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .order-card {
+      background: var(--clr-surface);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: transform var(--transition);
+    }
+    .order-header {
+      padding: 1.25rem 1.5rem;
+      background: var(--clr-bg2);
+      border-bottom: 1px solid var(--clr-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .order-id {
+      font-weight: 700;
+      color: var(--clr-accent);
+      font-family: var(--font-head);
+    }
+    .order-date {
+      color: var(--clr-text-muted);
+      font-size: 0.85rem;
+    }
+    .order-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-pending   { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+    .status-shipped   { background: rgba(13, 110, 253, 0.2); color: #0d6efd; }
+    .status-delivered { background: rgba(25, 135, 84, 0.2); color: #198754; }
+    .status-cancelled { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+
+    .order-body {
+      padding: 1.5rem;
+    }
+    .order-items-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .order-item-mini {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .order-footer {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--clr-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .order-total-label {
+      color: var(--clr-text-muted);
+      font-size: 0.9rem;
+    }
+    .order-total-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--clr-white);
+    }
+    .empty-orders {
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body data-page="orders">
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Shop<span>Lite</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart-btn" title="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge"></span>
+        </a>
+        <a href="auth.html" class="nav-auth-btn">Login</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="contact.html">Contact</a>
+    <a href="cart.html">🛒 Cart</a>
+  </div>
+
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a>
+          <span>›</span>
+          <span>My Orders</span>
+        </div>
+        <h1>Order <span style="color: var(--clr-accent)">History</span></h1>
+        <p>View and track all your ShopLite purchases.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div id="orders-list" class="orders-container">
+          <!-- Orders rendered by JS -->
+          <div class="loading-state" style="text-align:center; padding: 3rem;">
+            <div class="loader"></div>
+            <p style="margin-top:1rem">Fetching your orders...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo">Shop<span>Lite</span></div>
+        <p>Your go-to destination for quality products at fair prices.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All Products</a></li>
+          <li><a href="shop.html?cat=electronics">Electronics</a></li>
+          <li><a href="shop.html?cat=clothing">Clothing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="#">Return Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="cart.html">My Cart</a></li>
+          <li><a href="orders.html">My Orders</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 <span>ShopLite</span> — Group 63 Project</span>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

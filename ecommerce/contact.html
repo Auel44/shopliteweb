@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Contact ShopLite — reach out with questions, feedback, or support requests. We're happy to help."
+    />
+    <title>Contact — ShopLite</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-page="contact">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Shop<span>Lite</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a href="cart.html" class="nav-cart-btn" title="Cart">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            <span class="cart-badge" id="cart-badge-contact"></span>
+          </a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+
+    <main>
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>›</span>
+            <span>Contact</span>
+          </div>
+          <h1>Get in <span style="color: var(--clr-accent)">Touch</span></h1>
+          <p>Have a question or feedback? We'd love to hear from you.</p>
+        </div>
+      </div>
+
+      <!-- CONTACT SECTION -->
+      <section class="section">
+        <div class="container">
+          <div class="contact-layout">
+            <!-- LEFT: Info Cards -->
+            <div>
+              <h2
+                style="
+                  font-family: var(--font-head);
+                  font-size: 1.5rem;
+                  font-weight: 800;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                Contact Information
+              </h2>
+              <p
+                style="
+                  color: var(--clr-text-muted);
+                  margin-bottom: 1.75rem;
+                  font-size: 0.95rem;
+                "
+              >
+                We're available to help you Monday–Friday, 9am–6pm.
+              </p>
+
+              <div class="contact-info-cards">
+                <div class="contact-info-card">
+                  <div class="ci-icon">📍</div>
+                  <div>
+                    <h4>Our Location</h4>
+                    <p>123 Commerce Street,<br />Accra, Ghana</p>
+                  </div>
+                </div>
+                <div class="contact-info-card">
+                  <div class="ci-icon">📞</div>
+                  <div>
+                    <h4>Phone Number</h4>
+                    <p>+233 50 000 0000<br />+233 20 000 0000</p>
+                  </div>
+                </div>
+                <div class="contact-info-card">
+                  <div class="ci-icon">✉️</div>
+                  <div>
+                    <h4>Email Address</h4>
+                    <p>support@shoplite.com<br />sales@shoplite.com</p>
+                  </div>
+                </div>
+                <div class="contact-info-card">
+                  <div class="ci-icon">🕐</div>
+                  <div>
+                    <h4>Business Hours</h4>
+                    <p>
+                      Mon–Fri: 9:00 AM – 6:00 PM<br />Sat: 10:00 AM – 3:00 PM
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Map placeholder -->
+              <div class="map-section" style="margin-top: 1.5rem">
+                <div style="text-align: center">
+                  <div style="font-size: 2.5rem; margin-bottom: 0.5rem">🗺️</div>
+                  <div>Map Embed — Coming Soon</div>
+                  <div
+                    style="
+                      font-size: 0.78rem;
+                      margin-top: 0.25rem;
+                      opacity: 0.6;
+                    "
+                  >
+                    123 Commerce Street, Accra
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: Contact Form -->
+            <div class="contact-form-card">
+              <h2>Send Us a Message</h2>
+              <p class="sub">
+                Fill out the form and we'll respond within 24 hours.
+              </p>
+              <form id="contact-form" novalidate>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="ct-name">Full Name *</label>
+                    <input
+                      type="text"
+                      id="ct-name"
+                      class="form-control"
+                      placeholder="Your name"
+                      autocomplete="name"
+                    />
+                    <div class="field-error" id="ct-name-err"></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="ct-email">Email Address *</label>
+                    <input
+                      type="email"
+                      id="ct-email"
+                      class="form-control"
+                      placeholder="you@example.com"
+                      autocomplete="email"
+                    />
+                    <div class="field-error" id="ct-email-err"></div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="ct-subject">Subject *</label>
+                  <input
+                    type="text"
+                    id="ct-subject"
+                    class="form-control"
+                    placeholder="How can we help?"
+                  />
+                  <div class="field-error" id="ct-subject-err"></div>
+                </div>
+                <div class="form-group">
+                  <label for="ct-message">Message *</label>
+                  <textarea
+                    id="ct-message"
+                    class="form-control"
+                    rows="5"
+                    placeholder="Tell us more about your inquiry..."
+                  ></textarea>
+                  <div class="field-error" id="ct-message-err"></div>
+                </div>
+                <button
+                  type="submit"
+                  class="submit-btn"
+                  id="contact-submit-btn"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                  Send Message
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ SECTION -->
+      <section
+        class="section-narrow"
+        style="
+          background: var(--clr-surface);
+          border-top: 1px solid var(--clr-border);
+          border-bottom: 1px solid var(--clr-border);
+        "
+      >
+        <div class="container">
+          <div class="section-header" style="margin-bottom: 2rem">
+            <h2>Frequently Asked <span class="accent">Questions</span></h2>
+            <div class="divider"></div>
+          </div>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+              gap: 1.25rem;
+            "
+          >
+            <div
+              style="
+                background: var(--clr-bg2);
+                border: 1px solid var(--clr-border);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+              "
+            >
+              <h4
+                style="
+                  font-family: var(--font-head);
+                  font-size: 1rem;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                How long does delivery take?
+              </h4>
+              <p
+                style="
+                  color: var(--clr-text-muted);
+                  font-size: 0.88rem;
+                  line-height: 1.6;
+                "
+              >
+                Standard delivery takes 3–5 business days. Express delivery (1–2
+                days) is available at checkout.
+              </p>
+            </div>
+            <div
+              style="
+                background: var(--clr-bg2);
+                border: 1px solid var(--clr-border);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+              "
+            >
+              <h4
+                style="
+                  font-family: var(--font-head);
+                  font-size: 1rem;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                What is your return policy?
+              </h4>
+              <p
+                style="
+                  color: var(--clr-text-muted);
+                  font-size: 0.88rem;
+                  line-height: 1.6;
+                "
+              >
+                We offer a 30-day no-questions-asked return policy. Items must
+                be unused and in original packaging.
+              </p>
+            </div>
+            <div
+              style="
+                background: var(--clr-bg2);
+                border: 1px solid var(--clr-border);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+              "
+            >
+              <h4
+                style="
+                  font-family: var(--font-head);
+                  font-size: 1rem;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                Is my payment information secure?
+              </h4>
+              <p
+                style="
+                  color: var(--clr-text-muted);
+                  font-size: 0.88rem;
+                  line-height: 1.6;
+                "
+              >
+                Absolutely. We use industry-standard encryption to protect your
+                data. We never store card details.
+              </p>
+            </div>
+            <div
+              style="
+                background: var(--clr-bg2);
+                border: 1px solid var(--clr-border);
+                border-radius: var(--radius);
+                padding: 1.5rem;
+              "
+            >
+              <h4
+                style="
+                  font-family: var(--font-head);
+                  font-size: 1rem;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                Can I track my order?
+              </h4>
+              <p
+                style="
+                  color: var(--clr-text-muted);
+                  font-size: 0.88rem;
+                  line-height: 1.6;
+                "
+              >
+                Yes! After placing your order, you'll receive an email with a
+                tracking number to monitor your shipment.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="nav-logo">Shop<span>Lite</span></div>
+          <p>Your go-to destination for quality products at fair prices.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="shop.html">All Products</a></li>
+            <li><a href="shop.html?cat=electronics">Electronics</a></li>
+            <li><a href="shop.html?cat=clothing">Clothing</a></li>
+            <li><a href="shop.html?cat=home">Home & Living</a></li>
+            <li><a href="shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Help</h4>
+          <ul>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul>
+            <li><a href="cart.html">My Cart</a></li>
+            <li><a href="#">My Orders</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 <span>ShopLite</span> — Group 63 Project</span>
+        <span>Built with HTML, CSS & JavaScript ❤️</span>
+      </div>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

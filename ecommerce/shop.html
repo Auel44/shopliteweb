@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Browse all products at ShopLite — electronics, clothing, home essentials, and accessories. Search and filter to find exactly what you need."
+    />
+    <title>Shop — ShopLite</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-page="shop">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Shop<span>Lite</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a href="auth.html" class="btn-secondary" style="padding:0.45rem 1rem;font-size:0.87rem;" title="Login / Sign Up">Log In</a>
+          <a href="cart.html" class="nav-cart-btn" title="Cart">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            <span class="cart-badge" id="cart-badge-shop"></span>
+          </a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+      <a href="auth.html">👤 Log In / Sign Up</a>
+    </div>
+
+    <main>
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div class="container">
+          <div class="breadcrumb">
+            <a href="index.html">Home</a>
+            <span>›</span>
+            <span>Shop</span>
+          </div>
+          <h1>Our <span style="color: var(--clr-accent)">Products</span></h1>
+          <p>Explore our full collection — quality items, honest prices.</p>
+        </div>
+      </div>
+
+      <!-- SHOP SECTION -->
+      <section class="section">
+        <div class="container">
+          <!-- Controls -->
+          <div class="shop-controls">
+            <div class="search-wrap">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                id="shop-search"
+                placeholder="Search products..."
+                autocomplete="off"
+              />
+            </div>
+            <div class="category-tabs" id="cat-tabs"></div>
+          </div>
+          <div class="results-info" id="results-info"></div>
+          <!-- Product Grid -->
+          <div class="products-grid" id="shop-grid">
+            <div
+              style="
+                grid-column: 1/-1;
+                text-align: center;
+                padding: 3rem;
+                color: var(--clr-text-muted);
+              "
+            >
+              Loading products…
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="nav-logo">Shop<span>Lite</span></div>
+          <p>Your go-to destination for quality products at fair prices.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="shop.html">All Products</a></li>
+            <li><a href="shop.html?cat=electronics">Electronics</a></li>
+            <li><a href="shop.html?cat=clothing">Clothing</a></li>
+            <li><a href="shop.html?cat=home">Home & Living</a></li>
+            <li><a href="shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Help</h4>
+          <ul>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul>
+            <li><a href="cart.html">My Cart</a></li>
+            <li><a href="#">My Orders</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 <span>ShopLite</span> — Group 63 Project</span>
+        <span>Built with HTML, CSS & JavaScript ❤️</span>
+      </div>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+      // Handle category pre-selection from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get("cat");
+      if (catParam) {
+        document.addEventListener("DOMContentLoaded", () => {
+          const tab = document.querySelector(
+            `.cat-tab[data-cat="${catParam}"]`,
+          );
+          if (tab) {
+            document
+              .querySelectorAll(".cat-tab")
+              .forEach((t) => t.classList.remove("active"));
+            tab.classList.add("active");
+            activeCategory = catParam;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="View product details at ShopLite — full description, rating, images, and easy add-to-cart."
+    />
+    <title>Product — ShopLite</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-page="product">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">Shop<span>Lite</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a href="cart.html" class="nav-cart-btn" title="Cart">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 01-8 0" />
+            </svg>
+            <span class="cart-badge" id="cart-badge-product"></span>
+          </a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">🛒 Cart</a>
+    </div>
+
+    <main>
+      <section class="section">
+        <div class="container">
+          <div
+            class="breadcrumb"
+            style="justify-content: flex-start; margin-bottom: 2rem"
+          >
+            <a href="index.html">Home</a>
+            <span>›</span>
+            <a href="shop.html">Shop</a>
+            <span>›</span>
+            <span>Product Detail</span>
+          </div>
+          <!-- Product detail rendered by JS -->
+          <div id="product-detail"></div>
+        </div>
+      </section>
+      <!-- Related products rendered by JS -->
+      <div id="related-products"></div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="nav-logo">Shop<span>Lite</span></div>
+          <p>Your go-to destination for quality products at fair prices.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="shop.html">All Products</a></li>
+            <li><a href="shop.html?cat=electronics">Electronics</a></li>
+            <li><a href="shop.html?cat=clothing">Clothing</a></li>
+            <li><a href="shop.html?cat=home">Home & Living</a></li>
+            <li><a href="shop.html?cat=accessories">Accessories</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Help</h4>
+          <ul>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Account</h4>
+          <ul>
+            <li><a href="cart.html">My Cart</a></li>
+            <li><a href="#">My Orders</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 <span>ShopLite</span> — Group 63 Project</span>
+        <span>Built with HTML, CSS & JavaScript ❤️</span>
+      </div>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
