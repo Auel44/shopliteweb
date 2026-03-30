@@ -106,7 +106,7 @@ window.logout = logout;
 
 window.socialLogin = function(provider) {
   const endpoint = provider.toLowerCase();
-  window.location.href = `/api/auth/${endpoint}`;
+  window.location.href = `https://shopliteweb.onrender.com/api/auth/${endpoint}`;
 };
 
 // =============================================
