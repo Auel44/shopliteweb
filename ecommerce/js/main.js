@@ -19,7 +19,11 @@ async function handleOAuthCallback() {
       const user = JSON.parse(decodeURIComponent(userStr));
       localStorage.setItem("sl_token", token);
       localStorage.setItem("sl_user", JSON.stringify(user));
-      localStorage.setItem("shopLiteSession", JSON.stringify({ username: user.username, email: user.email }));
+      localStorage.setItem("shopLiteSession", JSON.stringify({ 
+        username: user.username, 
+        email: user.email,
+        role: user.role 
+      }));
       
       // Clean URL without refreshing
       const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
@@ -72,18 +76,34 @@ function initNav() {
   const navActions = document.querySelector(".nav-actions");
   const mobileActions = document.getElementById("mobile-menu");
 
-  if (session && navActions) {
-    const loginBtn = navActions.querySelector('a[href="auth.html"]');
-    if (loginBtn) {
-      loginBtn.outerHTML = `
-        <div class="user-menu">
-          <span class="user-name">Hi, ${session.username}</span>
-          <button onclick="logout()" class="btn-logout" title="Logout">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-          </button>
-          ${session.role === 'admin' ? '<a href="admin/dashboard.html" class="admin-link" title="Admin Panel">⚙️ Admin</a>' : ''}
-        </div>
-      `;
+  if (session) {
+    // Desktop Nav
+    if (navActions) {
+      const loginBtn = navActions.querySelector('a[href="auth.html"]');
+      if (loginBtn) {
+        loginBtn.outerHTML = `
+          <div class="user-menu">
+            <span class="user-name" title="${session.email}">Hi, ${session.username}</span>
+            <button onclick="logout()" class="btn-logout" title="Logout">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            </button>
+            ${session.role === 'admin' ? '<a href="admin.html" class="admin-link" title="Admin Panel">⚙️ Admin</a>' : ''}
+          </div>
+        `;
+      }
+    }
+    // Mobile Nav
+    if (mobileActions) {
+      const mobileLoginBtn = mobileActions.querySelector('a[href="auth.html"]');
+      if (mobileLoginBtn) {
+        mobileLoginBtn.outerHTML = `
+          <div class="mobile-user-info">
+            <span>👤 Signed in as <strong>${session.username}</strong></span>
+            ${session.role === 'admin' ? '<a href="admin.html" style="color:var(--clr-accent)">⚙️ Admin Portal</a>' : ''}
+            <a href="#" onclick="logout(); return false;" style="color:var(--clr-red)">🚪 Log Out</a>
+          </div>
+        `;
+      }
     }
   }
 
@@ -98,6 +118,8 @@ function initNav() {
 }
 
 function logout() {
+  localStorage.removeItem("sl_token");
+  localStorage.removeItem("sl_user");
   localStorage.removeItem("shopLiteToken");
   localStorage.removeItem("shopLiteSession");
   window.location.href = "index.html";
