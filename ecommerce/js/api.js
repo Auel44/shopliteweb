@@ -1,5 +1,5 @@
 
-const API_BASE = "https://shoplite-backend-rxpn.onrender.com/api";
+const API_BASE = "https://shopliteweb.onrender.com/api";
 
 const Auth = {
   getToken:   () => localStorage.getItem("sl_token"),

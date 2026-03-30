@@ -14,8 +14,8 @@ const session  = require("express-session");
 const app     = express();
 const PORT    = process.env.PORT || 5000;
 
-// ── Static Files ──────────────────────────────────────────
-app.use(express.static(path.join(__dirname, "..")));
+// ── Trust proxy (required for secure cookies behind Render's reverse proxy) ──
+app.set("trust proxy", 1);
 
 // ── Security headers ─────────────────────────────────────
 // Note: Adjusted Helmet to allow the frontend to function correctly
@@ -48,7 +48,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "shoplite-secret-g63",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === "production" }
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    httpOnly: true,
+  }
 }));
 
 app.use(passport.initialize());

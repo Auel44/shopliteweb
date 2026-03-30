@@ -76,18 +76,20 @@ exports.getMe = async (req, res) => {
 
 // OAuth Callback (Google/GitHub)
 exports.oauthCallback = async (req, res) => {
+  // Frontend lives on Cloudflare Pages — redirect there after OAuth
+  const FRONTEND_URL = process.env.FRONTEND_URL || "https://shopliteweb.pages.dev";
+
   try {
     if (!req.user) {
-      return res.redirect("/auth.html?error=OAuth failed");
+      return res.redirect(`${FRONTEND_URL}/auth.html?error=OAuth failed`);
     }
 
     const token = sign(req.user);
-    // User toJSON will handle cleaning sensitive data
     const userData = encodeURIComponent(JSON.stringify(req.user));
     
-    res.redirect(`/?auth_token=${token}&auth_user=${userData}`);
+    res.redirect(`${FRONTEND_URL}/?auth_token=${token}&auth_user=${userData}`);
   } catch (e) {
     console.error("oauthCallback:", e);
-    res.redirect("/auth.html?error=Server error during OAuth");
+    res.redirect(`${FRONTEND_URL}/auth.html?error=Server error during OAuth`);
   }
 };

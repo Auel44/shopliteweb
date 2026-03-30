@@ -333,5 +333,5 @@ function showForgot(e) {
 /* ── Social Login (placeholder) ── */
 function socialLogin(provider) {
   const endpoint = provider.toLowerCase();
-  window.location.href = `https://shoplite-backend-rxpn.onrender.com/api/auth/${endpoint}`;
+  window.location.href = `https://shopliteweb.onrender.com/api/auth/${endpoint}`;
 }
