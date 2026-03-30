@@ -83,16 +83,6 @@ app.get("/api/health", (_req, res) =>
   res.json({ success: true, message: "ShopLite API running 🚀", time: new Date() })
 );
 
-// Temporary debug endpoint — REMOVE after debugging
-app.get("/api/debug-env", (_req, res) =>
-  res.json({
-    FRONTEND_URL: process.env.FRONTEND_URL || "(not set — defaults to https://shopliteweb.pages.dev)",
-    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || "(not set)",
-    CALLBACK_DOMAIN: process.env.CALLBACK_DOMAIN || "(not set)",
-    NODE_ENV: process.env.NODE_ENV || "(not set)",
-  })
-);
-
 // ── 404 ───────────────────────────────────────────────────
 app.use((_req, res) =>
   res.status(404).json({ success: false, message: "Route not found." })
