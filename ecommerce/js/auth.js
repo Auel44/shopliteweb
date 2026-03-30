@@ -215,7 +215,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
   setLoading("login-btn", true);
 
   try {
-    const data = await AuthAPI.login(username, password);
+    const data = await AuthAPI.login({ username, password });
     setLoading("login-btn", false);
 
     // Save session (Token and User Info)
@@ -276,7 +276,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
   setLoading("signup-btn", true);
 
   try {
-    const data = await AuthAPI.register(username, email, password);
+    const data = await AuthAPI.register({ username, email, password });
     setLoading("signup-btn", false);
 
     // Auto-login (Save session)
