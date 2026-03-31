@@ -3,10 +3,12 @@
 // Page-specific logic controller
 // =============================================
 
-/* ── App Initialization ── */
+/* ————— App Initialization ————— */
 document.addEventListener("DOMContentLoaded", () => {
   handleOAuthCallback();
   initApp();
+  // Initialize Global Handlers
+  handleGlobalErrors();
 });
 
 async function handleOAuthCallback() {
@@ -31,7 +33,7 @@ async function handleOAuthCallback() {
       
       // Notify user
       if (typeof showToast === "function") {
-        showToast(`Welcome back, ${user.username}! 🎉`);
+        showToast(`Welcome back, ${user.username}! 🥳`);
       }
     } catch (e) {
       console.error("OAuth callback error:", e);
@@ -42,6 +44,7 @@ async function handleOAuthCallback() {
 function initApp() {
   initNav();
   updateNavCounter();
+  initTheme(); // Added Theme Initialization
 
   const page = document.body.dataset.page;
   if (page === "home") initHome();
@@ -115,6 +118,37 @@ function initNav() {
       a.classList.add("active");
     }
   });
+}
+
+/** Theme Initialization Logic **/
+function initTheme() {
+  const theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  }
+}
+
+/** Global Error Handlers **/
+function handleGlobalErrors() {
+  window.addEventListener('error', (e) => {
+    console.error('Runtime Error:', e.message);
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    console.error('Promise Rejection:', e.reason);
+  });
+}
+
+/** Image Error Handling Helper **/
+function handleImageError(img) {
+  img.onerror = null; 
+  img.src = 'images/placeholder.jpg';
 }
 
 function logout() {
@@ -244,14 +278,14 @@ async function initProduct() {
       <div class="product-detail-wrap">
         <div class="product-gallery">
           <div class="gallery-main">
-            <img id="main-img" src="${product.image}" alt="${product.name}" onerror="this.src='images/placeholder.jpg'">
+            <img id="main-img" src="${product.image}" alt="${product.name}" onerror="handleImageError(this)">
           </div>
           <div class="gallery-thumbs">
             ${[product.image, product.image, product.image]
               .map(
                 (img, i) => `
               <div class="gallery-thumb ${i === 0 ? "active" : ""}" onclick="switchThumb(this, '${img}')">
-                <img src="${img}" alt="View ${i + 1}" onerror="this.src='images/placeholder.jpg'">
+                <img src="${img}" alt="View ${i + 1}" onerror="handleImageError(this)">
               </div>`,
               )
               .join("")}
@@ -266,8 +300,8 @@ async function initProduct() {
             ${product.stock > 0 ? `<span class="badge badge-success">In Stock</span>` : `<span class="badge badge-error">Out of Stock</span>`}
           </div>
           <div class="product-price">
-            <span class="price">₵${product.price.toFixed(2)}</span>
-            ${product.original_price ? `<span class="price-old">₵${product.original_price.toFixed(2)}</span>` : ""}
+            <span class="price">₦${product.price.toFixed(2)}</span>
+            ${product.original_price ? `<span class="price-old">₦${product.original_price.toFixed(2)}</span>` : ""}
             ${discount > 0 ? `<span class="badge badge-warning">Save ${discount}%</span>` : ""}
           </div>
           <p class="product-description">${product.description}</p>
@@ -295,7 +329,7 @@ async function initProduct() {
         </div>
       </div>`;
 
-    // Related products (optional: fetch from API)
+    // Related products
     try {
       const relData = await ProductsAPI.getAll({ cat: product.category });
       const related = relData.products.filter(p => p.id !== product.id).slice(0, 4);
@@ -370,18 +404,18 @@ function renderCartItems() {
       (item) => `
     <div class="cart-item" data-id="${item.id}">
       <div class="cart-item-img">
-        <img src="${item.image}" alt="${item.name}" onerror="this.src='images/placeholder.jpg'">
+        <img src="${item.image}" alt="${item.name}" onerror="handleImageError(this)">
       </div>
       <div class="cart-item-info">
         <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">₵${item.price.toFixed(2)} each</div>
+        <div class="cart-item-price">₦${item.price.toFixed(2)} each</div>
       </div>
       <div class="cart-item-qty">
         <button onclick="cartQtyChange('${item.id}', -1)">−</button>
         <span>${item.qty}</span>
         <button onclick="cartQtyChange('${item.id}', 1)">+</button>
       </div>
-      <div class="cart-item-subtotal">₵${(item.price * item.qty).toFixed(2)}</div>
+      <div class="cart-item-subtotal">₦${(item.price * item.qty).toFixed(2)}</div>
       <button class="btn-danger" onclick="cartRemove('${item.id}')">Remove</button>
     </div>`,
     )
@@ -393,11 +427,11 @@ function renderOrderSummary() {
   const subtotalEl = document.getElementById("summary-subtotal");
   const shippingEl = document.getElementById("summary-shipping");
   const totalEl = document.getElementById("summary-total");
-  if (subtotalEl) subtotalEl.textContent = `₵${subtotal.toFixed(2)}`;
+  if (subtotalEl) subtotalEl.textContent = `₦${subtotal.toFixed(2)}`;
   if (shippingEl)
     shippingEl.textContent =
-      shipping === 0 ? "Free" : `₵${shipping.toFixed(2)}`;
-  if (totalEl) totalEl.textContent = `₵${total.toFixed(2)}`;
+      shipping === 0 ? "Free" : `₦${shipping.toFixed(2)}`;
+  if (totalEl) totalEl.textContent = `₦${total.toFixed(2)}`;
 }
 
 function cartQtyChange(id, delta) {
@@ -491,7 +525,7 @@ function initContact() {
     e.preventDefault();
     const valid = validateContactForm(form);
     if (valid) {
-      showToast("Message sent! We'll get back to you soon. 🎉");
+      showToast("Message sent! We'll get back to you soon. 🥳");
       form.reset();
       clearContactErrors(form);
     }

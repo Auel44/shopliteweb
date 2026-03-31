@@ -41,7 +41,7 @@ function initCheckoutForm() {
     const btn = document.getElementById("place-order-btn");
     btn.disabled    = true;
     const origText = btn.innerHTML;
-    btn.innerHTML   = "⏳ Placing order…";
+    btn.innerHTML   = "â³ Placing order…";
 
     try {
       const data = await OrdersAPI.place(delivery, items);
@@ -53,7 +53,7 @@ function initCheckoutForm() {
       renderOrderSummary();
       form.reset();
     } catch (err) {
-      showToast("❌ " + err.message, "error");
+      showToast("âŒ " + err.message, "error");
     } finally {
       btn.disabled    = false;
       btn.innerHTML   = origText;
@@ -101,7 +101,7 @@ function initContact() {
     const btn = document.getElementById("contact-submit-btn");
     const orig = btn.innerHTML;
     btn.disabled  = true;
-    btn.innerHTML = "⏳ Sending…";
+    btn.innerHTML = "â³ Sending…";
 
     try {
       await ContactAPI.send({
@@ -114,7 +114,7 @@ function initContact() {
       form.reset();
       clearContactErrors(form);
     } catch (err) {
-      showToast("❌ " + err.message, "error");
+      showToast("âŒ " + err.message, "error");
     } finally {
       btn.disabled  = false;
       btn.innerHTML = orig;

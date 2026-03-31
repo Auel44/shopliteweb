@@ -2,6 +2,45 @@
    auth.js — Login & Sign Up logic for ShopLite
    ============================================================ */
 
+/* ── Role Management ── */
+let currentRole = null;
+
+function setRole(role) {
+  currentRole = role;
+  document.getElementById('role-picker').style.display = 'none';
+  document.getElementById('auth-sections').style.display = 'block';
+
+  // Update role indicator text
+  const label = role === 'admin' ? '🔐 Admin' : '🛍️ Buyer';
+  document.getElementById('role-indicator-text').innerHTML = label;
+
+  // Toggle visible signup tab
+  const tabSignup      = document.getElementById('tab-signup');
+  const tabAdminSignup = document.getElementById('tab-admin-signup');
+  if (role === 'admin') {
+    tabSignup.style.display      = 'none';
+    tabAdminSignup.style.display = '';
+  } else {
+    tabSignup.style.display      = '';
+    tabAdminSignup.style.display = 'none';
+  }
+
+  // Default to login tab
+  switchTab('login');
+}
+
+function resetRole() {
+  currentRole = null;
+  document.getElementById('role-picker').style.display    = 'block';
+  document.getElementById('auth-sections').style.display  = 'none';
+  // Reset panels
+  document.querySelectorAll('.auth-tab').forEach(t   => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+  document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-login').classList.add('active');
+  document.getElementById('tab-login').setAttribute('aria-selected','true');
+  document.getElementById('panel-login').classList.add('active');
+}
+
 /* ── Tab Switcher ── */
 function switchTab(tab) {
   const tabs = document.querySelectorAll(".auth-tab");
@@ -20,6 +59,7 @@ function switchTab(tab) {
   // Clear alerts when switching tabs
   hideAlert("login-alert");
   hideAlert("signup-alert");
+  hideAlert("admin-signup-alert");
 }
 
 /* ── Terms & Privacy Modal Logic ── */
@@ -143,6 +183,7 @@ function checkStrength(value) {
 function showError(inputId, errId) {
   const input = document.getElementById(inputId);
   const err = document.getElementById(errId);
+  if (!input || !err) return;
   input.classList.add("error");
   err.classList.add("show");
 }
@@ -150,12 +191,14 @@ function showError(inputId, errId) {
 function clearError(inputId, errId) {
   const input = document.getElementById(inputId);
   const err = document.getElementById(errId);
+  if (!input || !err) return;
   input.classList.remove("error");
   err.classList.remove("show");
 }
 
 function showAlert(alertId, message) {
   const el = document.getElementById(alertId);
+  if (!el) return;
   el.textContent = message;
   el.classList.add("show");
 }
@@ -187,114 +230,174 @@ spinStyle.textContent = "@keyframes spin { to { transform: rotate(360deg); } }";
 document.head.appendChild(spinStyle);
 
 /* ── LOGIN FORM ── */
-document.getElementById("login-form").addEventListener("submit", async function (e) {
-  e.preventDefault();
-  hideAlert("login-alert");
+const loginForm = document.getElementById("login-form");
+if (loginForm) {
+  loginForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    hideAlert("login-alert");
 
-  const username = document.getElementById("login-username").value.trim();
-  const password = document.getElementById("login-password").value;
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value;
 
-  let valid = true;
+    let valid = true;
 
-  // Validate username
-  clearError("login-username", "login-username-err");
-  if (!username) {
-    showError("login-username", "login-username-err");
-    valid = false;
-  }
+    // Validate username
+    clearError("login-username", "login-username-err");
+    if (!username) {
+      showError("login-username", "login-username-err");
+      valid = false;
+    }
 
-  // Validate password
-  clearError("login-password", "login-password-err");
-  if (!password) {
-    showError("login-password", "login-password-err");
-    valid = false;
-  }
+    // Validate password
+    clearError("login-password", "login-password-err");
+    if (!password) {
+      showError("login-password", "login-password-err");
+      valid = false;
+    }
 
-  if (!valid) return;
+    if (!valid) return;
 
-  setLoading("login-btn", true);
+    setLoading("login-btn", true);
 
-  try {
-    const data = await AuthAPI.login({ username, password });
-    setLoading("login-btn", false);
+    try {
+      const data = await AuthAPI.login({ username, password });
+      setLoading("login-btn", false);
 
-    // Save session (Token and User Info)
-    localStorage.setItem("shopLiteToken", data.token);
-    localStorage.setItem("shopLiteSession", JSON.stringify(data.user));
+      // Save session (Token and User Info)
+      localStorage.setItem("shopLiteToken", data.token);
+      localStorage.setItem("shopLiteSession", JSON.stringify(data.user));
 
-    // Show success
-    document.getElementById("login-form").style.display = "none";
-    document.querySelector(".auth-tabs").style.display = "none";
-    if (document.querySelector(".auth-divider")) document.querySelector(".auth-divider").style.display = "none";
-    if (document.querySelector(".social-btns")) document.querySelector(".social-btns").style.display = "none";
-    document.getElementById("login-success").classList.add("show");
+      // Show success
+      document.getElementById("login-form").style.display = "none";
+      if (document.querySelector(".auth-tabs")) document.querySelector(".auth-tabs").style.display = "none";
+      if (document.querySelector(".auth-divider")) document.querySelector(".auth-divider").style.display = "none";
+      if (document.querySelector(".social-btns")) document.querySelector(".social-btns").style.display = "none";
+      if (document.getElementById("role-indicator")) document.getElementById("role-indicator").style.display = "none";
+      document.getElementById("login-success").classList.add("show");
 
-    // Auto-redirect
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2000);
-  } catch (err) {
-    setLoading("login-btn", false);
-    showAlert("login-alert", `⚠️ ${err.message || "Login failed. Please try again."}`);
-  }
-});
+      // Auto-redirect
+      setTimeout(() => {
+        if (data.user && data.user.role === "admin") {
+          window.location.href = "admin.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      }, 2000);
+    } catch (err) {
+      setLoading("login-btn", false);
+      showAlert("login-alert", `⚠️ ${err.message || "Login failed. Please try again."}`);
+    }
+  });
+}
 
 /* ── SIGN UP FORM ── */
-document.getElementById("signup-form").addEventListener("submit", async function (e) {
-  e.preventDefault();
-  hideAlert("signup-alert");
+const signupForm = document.getElementById("signup-form");
+if (signupForm) {
+  signupForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    hideAlert("signup-alert");
 
-  const username = document.getElementById("signup-username").value.trim();
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value;
-  const confirm = document.getElementById("signup-confirm").value;
-  const terms = document.getElementById("signup-terms").checked;
+    const username = document.getElementById("signup-username").value.trim();
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value;
+    const confirm = document.getElementById("signup-confirm").value;
+    const terms = document.getElementById("signup-terms").checked;
 
-  let valid = true;
+    let valid = true;
 
-  // Form Validation
-  clearError("signup-username", "signup-username-err");
-  if (username.length < 3) { showError("signup-username", "signup-username-err"); valid = false; }
+    // Form Validation
+    clearError("signup-username", "signup-username-err");
+    if (username.length < 3) { showError("signup-username", "signup-username-err"); valid = false; }
 
-  clearError("signup-email", "signup-email-err");
-  const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRx.test(email)) { showError("signup-email", "signup-email-err"); valid = false; }
+    clearError("signup-email", "signup-email-err");
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRx.test(email)) { showError("signup-email", "signup-email-err"); valid = false; }
 
-  clearError("signup-password", "signup-password-err");
-  if (password.length < 6) { showError("signup-password", "signup-password-err"); valid = false; }
+    clearError("signup-password", "signup-password-err");
+    if (password.length < 6) { showError("signup-password", "signup-password-err"); valid = false; }
 
-  clearError("signup-confirm", "signup-confirm-err");
-  if (password !== confirm) { showError("signup-confirm", "signup-confirm-err"); valid = false; }
+    clearError("signup-confirm", "signup-confirm-err");
+    if (password !== confirm) { showError("signup-confirm", "signup-confirm-err"); valid = false; }
 
-  if (!terms) {
-    showAlert("signup-alert", "⚠️ You must accept the Terms & Privacy Policy to continue.");
-    valid = false;
-  }
+    if (!terms) {
+      showAlert("signup-alert", "⚠️ You must accept the Terms & Privacy Policy to continue.");
+      valid = false;
+    }
 
-  if (!valid) return;
+    if (!valid) return;
 
-  setLoading("signup-btn", true);
+    setLoading("signup-btn", true);
 
-  try {
-    const data = await AuthAPI.register({ username, email, password });
-    setLoading("signup-btn", false);
+    try {
+      const data = await AuthAPI.register({ username, email, password });
+      setLoading("signup-btn", false);
 
-    // Auto-login (Save session)
-    localStorage.setItem("shopLiteToken", data.token);
-    localStorage.setItem("shopLiteSession", JSON.stringify(data.user));
+      // Auto-login (Save session)
+      localStorage.setItem("shopLiteToken", data.token);
+      localStorage.setItem("shopLiteSession", JSON.stringify(data.user));
 
-    // Show success
-    document.getElementById("signup-form").style.display = "none";
-    document.getElementById("signup-success").classList.add("show");
+      // Show success
+      document.getElementById("signup-form").style.display = "none";
+      document.getElementById("signup-success").classList.add("show");
 
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2500);
-  } catch (err) {
-    setLoading("signup-btn", false);
-    showAlert("signup-alert", `⚠️ ${err.message || "Registration failed. Please try again."}`);
-  }
-});
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2500);
+    } catch (err) {
+      setLoading("signup-btn", false);
+      showAlert("signup-alert", `⚠️ ${err.message || "Registration failed. Please try again."}`);
+    }
+  });
+}
+
+/* ── ADMIN SIGN UP FORM ── */
+const ADMIN_SIGNUP_PASSCODE = "ADMIN2026"; // Must match ADMIN_PASSCODE in backend .env
+
+const adminSignupForm = document.getElementById("admin-signup-form");
+if (adminSignupForm) {
+  adminSignupForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    hideAlert("admin-signup-alert");
+
+    const username  = document.getElementById("admin-signup-username").value.trim();
+    const email     = document.getElementById("admin-signup-email").value.trim();
+    const password  = document.getElementById("admin-signup-password").value;
+    const adminCode = document.getElementById("admin-code").value.trim();
+
+    let valid = true;
+
+    clearError("admin-signup-username", "admin-signup-username-err");
+    if (username.length < 3) { showError("admin-signup-username", "admin-signup-username-err"); valid = false; }
+
+    clearError("admin-signup-email", "admin-signup-email-err");
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRx.test(email)) { showError("admin-signup-email", "admin-signup-email-err"); valid = false; }
+
+    clearError("admin-signup-password", "admin-signup-password-err");
+    if (password.length < 6) { showError("admin-signup-password", "admin-signup-password-err"); valid = false; }
+
+    clearError("admin-code", "admin-code-err");
+    if (adminCode !== ADMIN_SIGNUP_PASSCODE) { showError("admin-code", "admin-code-err"); valid = false; }
+
+    if (!valid) return;
+
+    setLoading("admin-signup-btn", true);
+
+    try {
+      const data = await AuthAPI.register({ username, email, password, role: "admin", adminCode });
+      setLoading("admin-signup-btn", false);
+
+      // Show success
+      document.getElementById("admin-signup-form").style.display = "none";
+      document.getElementById("admin-signup-success").classList.add("show");
+
+      setTimeout(() => { window.location.href = "admin.html"; }, 2500);
+    } catch (err) {
+      setLoading("admin-signup-btn", false);
+      showAlert("admin-signup-alert", `⚠️ ${err.message || "Admin registration failed."}`);
+    }
+  });
+}
 
 /* ── Clear errors on input ── */
 ["login-username", "login-password"].forEach((id) => {
@@ -315,6 +418,15 @@ document.getElementById("signup-form").addEventListener("submit", async function
     });
 });
 
+["admin-signup-username", "admin-signup-email", "admin-signup-password", "admin-code"].forEach((id) => {
+  const el = document.getElementById(id);
+  if (el)
+    el.addEventListener("input", () => {
+      clearError(id, id + "-err");
+      hideAlert("admin-signup-alert");
+    });
+});
+
 /* ── Forgot Password (placeholder) ── */
 function showForgot(e) {
   e.preventDefault();
@@ -322,12 +434,13 @@ function showForgot(e) {
     "login-alert",
     "ℹ️ Password reset is not available yet. Please contact support."
   );
-  document.getElementById("login-alert").className = "form-alert show";
-  document.getElementById("login-alert").style.background =
-    "rgba(245, 166, 35, 0.1)";
-  document.getElementById("login-alert").style.border =
-    "1px solid rgba(245, 166, 35, 0.3)";
-  document.getElementById("login-alert").style.color = "var(--clr-accent)";
+  const alert = document.getElementById("login-alert");
+  if (alert) {
+    alert.className = "form-alert show";
+    alert.style.background = "rgba(245, 166, 35, 0.1)";
+    alert.style.border = "1px solid rgba(245, 166, 35, 0.3)";
+    alert.style.color = "var(--clr-accent)";
+  }
 }
 
 /* ── Social Login (placeholder) ── */

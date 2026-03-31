@@ -14,7 +14,17 @@ function sign(user) {
 // POST /api/auth/register
 exports.register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role, adminCode } = req.body;
+
+    // Validate admin role
+    let finalRole = "customer";
+    if (role === "admin") {
+      const passcode = process.env.ADMIN_PASSCODE || "ADMIN2026";
+      if (adminCode !== passcode) {
+        return res.status(403).json({ success: false, message: "Invalid admin passcode." });
+      }
+      finalRole = "admin";
+    }
 
     const exists = await User.findOne({ $or: [{ username }, { email }] });
     if (exists) {
@@ -27,7 +37,7 @@ exports.register = async (req, res) => {
       username,
       email,
       password: hash,
-      role: "customer"
+      role: finalRole
     });
 
     res.status(201).json({ 
