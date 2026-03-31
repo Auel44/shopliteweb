@@ -180,6 +180,97 @@
     #auth-guard { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:999; flex-direction:column; gap:1rem; text-align:center; }
     #auth-guard h2 { color:var(--red); }
     #auth-guard p  { color:var(--muted); }
+
+    /* ── Light Theme ─────────────────────────────────────── */
+    [data-theme='light'] {
+      --bg:        #f5f6fa;
+      --bg2:       #ffffff;
+      --surface:   #ffffff;
+      --border:    #e2e5f1;
+      --text:      #1a1d2e;
+      --muted:     #6c757d;
+    }
+    [data-theme='light'] .sidebar {
+      background: #ffffff;
+      border-right-color: #e2e5f1;
+    }
+    [data-theme='light'] .topbar {
+      background: #ffffff;
+      border-bottom-color: #e2e5f1;
+    }
+    [data-theme='light'] .sidebar-brand { color: #1a1d2e; }
+    [data-theme='light'] .sidebar-footer { border-top-color: #e2e5f1; }
+    [data-theme='light'] .sidebar-footer strong { color: #1a1d2e; }
+    [data-theme='light'] td { border-bottom-color: rgba(0,0,0,.06); }
+    [data-theme='light'] tr:hover td { background: rgba(0,0,0,.02); }
+    [data-theme='light'] .form-control {
+      background: #f5f6fa;
+      border-color: #e2e5f1;
+      color: #1a1d2e;
+    }
+    [data-theme='light'] select.form-control option { background: #ffffff; }
+    [data-theme='light'] .stat-card { background: #ffffff; border-color: #e2e5f1; }
+    [data-theme='light'] .card { background: #ffffff; border-color: #e2e5f1; }
+    [data-theme='light'] .card-header { border-bottom-color: #e2e5f1; }
+    [data-theme='light'] .modal-box { background: #ffffff; border-color: #e2e5f1; }
+    [data-theme='light'] .btn-ghost { background: rgba(0,0,0,.04); color: #6c757d; }
+    [data-theme='light'] .btn-ghost:hover { background: rgba(0,0,0,.08); color: #1a1d2e; }
+    [data-theme='light'] .nav-item:hover { color: #1a1d2e; background: rgba(108,99,255,.06); }
+    [data-theme='light'] #auth-guard { background: #f5f6fa; }
+
+    /* ── Theme toggle ──────────────────────────────────────── */
+    #theme-toggle { transition: transform 0.3s ease; }
+    #theme-toggle:hover { transform: rotate(15deg) scale(1.1); }
+    #theme-toggle svg { stroke: var(--text); }
+
+    /* ── Logout Confirmation Modal ──────────────────────── */
+    #admin-logout-modal .modal-box {
+      max-width: 420px;
+      text-align: center;
+      padding: 2.5rem 2rem 2rem;
+    }
+    .logout-modal-icon {
+      width: 64px; height: 64px; margin: 0 auto 1.25rem;
+      background: rgba(108,99,255,0.12);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem;
+    }
+    .logout-modal-title {
+      font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .logout-modal-msg {
+      color: var(--muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.75rem;
+    }
+    .logout-modal-actions {
+      display: flex; gap: 0.75rem; justify-content: center;
+    }
+    .logout-modal-actions .btn-cancel {
+      flex: 1; padding: 0.7rem 1.25rem;
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px;
+      font-weight: 600; font-size: 0.9rem; cursor: pointer;
+      transition: all 0.18s;
+    }
+    .logout-modal-actions .btn-cancel:hover {
+      background: var(--bg); border-color: var(--muted);
+    }
+    .logout-modal-actions .btn-confirm-logout {
+      flex: 1; padding: 0.7rem 1.25rem;
+      background: var(--red); color: #fff; border: none;
+      border-radius: 10px; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: all 0.18s;
+    }
+    .logout-modal-actions .btn-confirm-logout:hover {
+      background: #dc2626; transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+    }
+    .modal-close {
+      position: absolute; top: 1.25rem; right: 1.25rem;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; background: var(--surface); color: var(--muted);
+      cursor: pointer; transition: all 0.18s; border: none;
+    }
+    .modal-close:hover { background: var(--border); color: var(--text); }
   </style>
 </head>
 <body>
@@ -388,6 +479,25 @@
   </div>
 </div>
 
+<!-- ── Logout Confirmation Modal ──────────────────────── -->
+<div class="modal-overlay" id="admin-logout-modal">
+  <div class="modal-box" style="position:relative">
+    <button class="modal-close" id="logout-close-btn" aria-label="Close modal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <div class="logout-modal-icon">👋</div>
+    <h3 class="logout-modal-title">Leaving So Soon?</h3>
+    <p class="logout-modal-msg">Are you sure you want to log out of ShopLite? We'll miss you!</p>
+    <div class="logout-modal-actions">
+      <button class="btn-cancel" id="logout-cancel-btn">Stay Connected</button>
+      <button class="btn-confirm-logout" id="logout-confirm-btn">Yes, Log Out</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Toast ──────────────────────────────────────────── -->
 <div id="toast-container"></div>
 
@@ -464,6 +574,8 @@ function switchTab(tab) {
 function initTheme() {
   const theme = localStorage.getItem('theme') || 'dark';
   document.documentElement.setAttribute('data-theme', theme);
+  updateThemeIcons(theme);
+
   const toggle = document.getElementById('theme-toggle');
   if (toggle) {
     toggle.addEventListener('click', () => {
@@ -471,8 +583,16 @@ function initTheme() {
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+      updateThemeIcons(next);
     });
   }
+}
+
+function updateThemeIcons(theme) {
+  const lightIcon = document.getElementById('theme-icon-light');
+  const darkIcon = document.getElementById('theme-icon-dark');
+  if (lightIcon) lightIcon.style.display = theme === 'light' ? 'block' : 'none';
+  if (darkIcon) darkIcon.style.display = theme === 'dark' ? 'block' : 'none';
 }
 
 /* ── Toast ───────────────────────────────────────────── */
@@ -727,11 +847,31 @@ async function toggleRole(id, currentRole) {
 
 /* ── Logout ──────────────────────────────────────────── */
 function doLogout() {
-  if (confirm("Log out of admin portal?")) {
-    ["shopLiteToken","shopLiteSession"].forEach(k => localStorage.removeItem(k));
-    window.location.href = "auth.html";
-  }
+  const modal = document.getElementById('admin-logout-modal');
+  modal.classList.add('open');
 }
+
+(function setupLogoutModal() {
+  const modal = document.getElementById('admin-logout-modal');
+  if (!modal) return;
+
+  const closeBtn   = document.getElementById('logout-close-btn');
+  const cancelBtn  = document.getElementById('logout-cancel-btn');
+  const confirmBtn = document.getElementById('logout-confirm-btn');
+
+  const closeModal = () => modal.classList.remove('open');
+
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    ["shopLiteToken", "shopLiteSession", "sl_token", "sl_user", "g63_cart"].forEach(k => localStorage.removeItem(k));
+    window.location.href = "auth.html";
+  });
+})();
 </script>
 </body>
 </html>

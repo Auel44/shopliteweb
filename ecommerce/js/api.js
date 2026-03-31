@@ -44,9 +44,30 @@ const AuthAPI = {
       body: JSON.stringify({ username, password }),
     });
     Auth.save(data.token, data.user);
+
+    // Load saved cart from backend after login
+    try {
+      const cartData = await CartAPI.get();
+      if (cartData.items && cartData.items.length > 0) {
+        localStorage.setItem("g63_cart", JSON.stringify(cartData.items));
+      }
+    } catch (_) { /* ignore if cart fetch fails */ }
+
     return data;
   },
-  logout() {
+  async logout() {
+    // Save current cart to backend before clearing
+    if (Auth.isLoggedIn()) {
+      try {
+        const cart = JSON.parse(localStorage.getItem("g63_cart") || "[]");
+        if (cart.length > 0) {
+          await CartAPI.save(cart);
+        }
+      } catch (_) { /* ignore if save fails */ }
+    }
+
+    // Clear local cart on logout
+    localStorage.removeItem("g63_cart");
     Auth.clear();
     window.location.href = "index.html";
   },
@@ -90,6 +111,13 @@ const ContactAPI = {
   getAll:   (qs) => apiFetch(`/contact${qs ? "?" + qs : ""}`),
   markRead: (id) => apiFetch(`/contact/${id}/read`, { method: "PATCH" }),
   remove:   (id) => apiFetch(`/contact/${id}`, { method: "DELETE" }),
+};
+
+// ── Cart API (backend persistence) ───────────────────────
+const CartAPI = {
+  get:   () => apiFetch("/cart"),
+  save:  (items) => apiFetch("/cart", { method: "PUT", body: JSON.stringify({ items }) }),
+  clear: () => apiFetch("/cart", { method: "DELETE" }),
 };
 
 // ── Admin API ────────────────────────────────────────────
@@ -140,8 +168,8 @@ function showLogoutModal() {
       if (e.target === modal) closeModal();
     });
 
-    confirmBtn.addEventListener("click", () => {
-      AuthAPI.logout();
+    confirmBtn.addEventListener("click", async () => {
+      await AuthAPI.logout();
     });
   }
 

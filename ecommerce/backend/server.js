@@ -76,6 +76,7 @@ app.use("/api/auth",     authLimiter, require("./routes/auth"));
 app.use("/api/products", require("./routes/products"));
 app.use("/api/orders",   require("./routes/orders"));
 app.use("/api/contact",  require("./routes/contact"));
+app.use("/api/cart",     require("./routes/cart"));
 app.use("/api/admin",    require("./routes/admin"));
 
 // ── Health check ──────────────────────────────────────────

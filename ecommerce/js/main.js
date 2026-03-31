@@ -124,6 +124,8 @@ function initNav() {
 function initTheme() {
   const theme = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', theme);
+  updateThemeIcons(theme);
+
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
     themeToggle.addEventListener('click', (e) => {
@@ -132,8 +134,16 @@ function initTheme() {
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+      updateThemeIcons(next);
     });
   }
+}
+
+function updateThemeIcons(theme) {
+  const lightIcon = document.getElementById('theme-icon-light');
+  const darkIcon = document.getElementById('theme-icon-dark');
+  if (lightIcon) lightIcon.style.display = theme === 'light' ? 'block' : 'none';
+  if (darkIcon) darkIcon.style.display = theme === 'dark' ? 'block' : 'none';
 }
 
 /** Global Error Handlers **/
@@ -152,13 +162,23 @@ function handleImageError(img) {
   img.src = 'images/placeholder.jpg';
 }
 
-function logout() {
+async function logout() {
   if (typeof showToast === "function") {
     showToast("Logged out successfully. See you soon! 👋");
   }
+
+  // Save cart to backend before clearing (if logged in)
+  if (Auth.isLoggedIn()) {
+    try {
+      const cart = JSON.parse(localStorage.getItem("g63_cart") || "[]");
+      if (cart.length > 0) {
+        await CartAPI.save(cart);
+      }
+    } catch (_) { /* ignore if save fails */ }
+  }
   
-  // Clear all potential session keys
-  const keysToRemove = ["sl_token", "sl_user", "shopLiteToken", "shopLiteSession"];
+  // Clear all potential session keys + cart
+  const keysToRemove = ["sl_token", "sl_user", "shopLiteToken", "shopLiteSession", "g63_cart"];
   keysToRemove.forEach(key => localStorage.removeItem(key));
 
   // Small delay so user can see the toast
