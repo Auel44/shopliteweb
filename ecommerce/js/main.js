@@ -122,12 +122,12 @@ function initNav() {
 
 /** Theme Initialization Logic **/
 function initTheme() {
-  const theme = localStorage.getItem('theme') || 'light';
+  const theme = localStorage.getItem('theme') || 'dark';
   document.documentElement.setAttribute('data-theme', theme);
   updateThemeIcons(theme);
 
   const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) {
+  if (themeToggle && !themeToggle.dataset.themeBound) {
     themeToggle.addEventListener('click', (e) => {
       e.stopPropagation();
       const current = document.documentElement.getAttribute('data-theme');
@@ -136,8 +136,14 @@ function initTheme() {
       localStorage.setItem('theme', next);
       updateThemeIcons(next);
     });
+    themeToggle.dataset.themeBound = "true";
   }
 }
+
+// Ensure theme is applied even when page is loaded from BFCache (back button)
+window.addEventListener('pageshow', (event) => {
+  initTheme();
+});
 
 function updateThemeIcons(theme) {
   const lightIcon = document.getElementById('theme-icon-light');

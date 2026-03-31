@@ -633,7 +633,7 @@ function initTheme() {
   updateThemeIcons(theme);
 
   const toggle = document.getElementById('theme-toggle');
-  if (toggle) {
+  if (toggle && !toggle.dataset.themeBound) {
     toggle.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? 'light' : 'dark';
@@ -641,8 +641,14 @@ function initTheme() {
       localStorage.setItem('theme', next);
       updateThemeIcons(next);
     });
+    toggle.dataset.themeBound = "true";
   }
 }
+
+// Support BFCache (Back/Forward Cache) persistence
+window.addEventListener('pageshow', (event) => {
+  initTheme();
+});
 
 function updateThemeIcons(theme) {
   const lightIcon = document.getElementById('theme-icon-light');
@@ -950,6 +956,9 @@ function doLogout() {
     });
   });
 })();
+
+// Initialize theme on load
+initTheme();
 </script>
 </body>
 </html>
