@@ -152,11 +152,18 @@ function handleImageError(img) {
 }
 
 function logout() {
-  localStorage.removeItem("sl_token");
-  localStorage.removeItem("sl_user");
-  localStorage.removeItem("shopLiteToken");
-  localStorage.removeItem("shopLiteSession");
-  window.location.href = "index.html";
+  if (typeof showToast === "function") {
+    showToast("Logged out successfully. See you soon! 👋");
+  }
+  
+  // Clear all potential session keys
+  const keysToRemove = ["sl_token", "sl_user", "shopLiteToken", "shopLiteSession"];
+  keysToRemove.forEach(key => localStorage.removeItem(key));
+
+  // Small delay so user can see the toast
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 800);
 }
 window.logout = logout;
 

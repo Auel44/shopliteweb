@@ -267,6 +267,14 @@ if (loginForm) {
       localStorage.setItem("shopLiteToken", data.token);
       localStorage.setItem("shopLiteSession", JSON.stringify(data.user));
 
+      // Update success button href
+      const successBtn = document.getElementById("login-success-btn");
+      const isAdmin = data.user && data.user.role === "admin";
+      if (successBtn) {
+        successBtn.href = isAdmin ? "admin.html" : "index.html";
+        successBtn.textContent = isAdmin ? "Go to Admin Panel" : "Go to Store";
+      }
+
       // Show success
       document.getElementById("login-form").style.display = "none";
       if (document.querySelector(".auth-tabs")) document.querySelector(".auth-tabs").style.display = "none";
@@ -277,11 +285,7 @@ if (loginForm) {
 
       // Auto-redirect
       setTimeout(() => {
-        if (data.user && data.user.role === "admin") {
-          window.location.href = "admin.html";
-        } else {
-          window.location.href = "index.html";
-        }
+        window.location.href = isAdmin ? "admin.html" : "index.html";
       }, 2000);
     } catch (err) {
       setLoading("login-btn", false);
@@ -336,12 +340,20 @@ if (signupForm) {
       localStorage.setItem("shopLiteToken", data.token);
       localStorage.setItem("shopLiteSession", JSON.stringify(data.user));
 
+      // Update success button href
+      const successBtn = document.getElementById("signup-success-btn");
+      const isAdmin = data.user && data.user.role === "admin";
+      if (successBtn) {
+        successBtn.href = isAdmin ? "admin.html" : "index.html";
+        successBtn.textContent = isAdmin ? "Go to Dashboard" : "Start Shopping";
+      }
+
       // Show success
       document.getElementById("signup-form").style.display = "none";
       document.getElementById("signup-success").classList.add("show");
 
       setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = isAdmin ? "admin.html" : "index.html";
       }, 2500);
     } catch (err) {
       setLoading("signup-btn", false);
@@ -386,6 +398,10 @@ if (adminSignupForm) {
     try {
       const data = await AuthAPI.register({ username, email, password, role: "admin", adminCode });
       setLoading("admin-signup-btn", false);
+
+      // Save session (Token and User Info)
+      localStorage.setItem("shopLiteToken", data.token);
+      localStorage.setItem("shopLiteSession", JSON.stringify(data.user));
 
       // Show success
       document.getElementById("admin-signup-form").style.display = "none";
