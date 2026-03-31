@@ -21,7 +21,7 @@ function initMiniCart() {
         <div class="drawer-footer">
           <div class="drawer-total">
             <span>Subtotal</span>
-            <span id="drawer-subtotal">₵0.00</span>
+            <span id="drawer-subtotal">GH₵0.00</span>
           </div>
           <div class="drawer-actions">
             <a href="cart.html" class="btn-secondary" style="width:100%; justify-content:center;">View Bag</a>
@@ -80,7 +80,7 @@ function renderDrawer() {
         <p>Your bag is empty.</p>
         <a href="shop.html" class="btn-ghost" style="margin-top:1rem;">Start Shopping</a>
       </div>`;
-    subtotalEl.textContent = "₵0.00";
+    subtotalEl.textContent = "GH₵0.00";
     return;
   }
 
@@ -89,14 +89,14 @@ function renderDrawer() {
       <img src="${item.image}" alt="${item.name}" class="drawer-img" onerror="this.src='images/placeholder.svg'">
       <div class="drawer-info">
         <a href="product.html?id=${item.id}" class="drawer-name">${item.name}</a>
-        <div class="drawer-meta">${item.qty} × ₵${item.price.toFixed(2)}</div>
+        <div class="drawer-meta">${item.qty} × GH₵${item.price.toFixed(2)}</div>
       </div>
       <button onclick="removeFromMiniCart(${item.id})" style="color:var(--clr-error); font-size:0.8rem;">Remove</button>
     </div>
   `).join("");
 
   const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-  subtotalEl.textContent = `₵${subtotal.toFixed(2)}`;
+  subtotalEl.textContent = `GH₵${subtotal.toFixed(2)}`;
 }
 
 function removeFromMiniCart(id) {

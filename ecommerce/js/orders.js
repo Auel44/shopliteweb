@@ -71,7 +71,7 @@ function renderOrders(orders, container) {
             ${order.items.map(item => `
               <div class="order-item-mini">
                 <span>${item.qty}x ${item.name}</span>
-                <span>₵${(item.price * item.qty).toFixed(2)}</span>
+                <span>GH₵${(item.price * item.qty).toFixed(2)}</span>
               </div>
             `).join('')}
           </div>
@@ -82,7 +82,7 @@ function renderOrders(orders, container) {
           </div>
           <div class="order-total-wrap">
             <span class="order-total-label">Total: </span>
-            <span class="order-total-val">₵${order.total.toFixed(2)}</span>
+            <span class="order-total-val">GH₵${order.total.toFixed(2)}</span>
           </div>
         </div>
       </div>

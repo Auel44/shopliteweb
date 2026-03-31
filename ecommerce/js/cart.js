@@ -137,8 +137,8 @@ function buildProductCard(product) {
         </div>
         <div class="card-footer">
           <div class="price-wrap">
-            <span class="price">₵${product.price.toFixed(2)}</span>
-            ${product.original_price ? `<span class="price-old">₵${product.original_price.toFixed(2)}</span>` : ""}
+            <span class="price">GH₵${product.price.toFixed(2)}</span>
+            ${product.original_price ? `<span class="price-old">GH₵${product.original_price.toFixed(2)}</span>` : ""}
           </div>
           <button class="btn-add" onclick="handleAddToCart('${product.id}', this)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>

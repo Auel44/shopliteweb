@@ -43,7 +43,7 @@ async function handleOAuthCallback() {
 
 function initApp() {
   initNav();
-  updateNavCounter();
+  if (typeof updateNavCounter === "function") updateNavCounter();
   initTheme(); // Added Theme Initialization
 
   const page = document.body.dataset.page;
@@ -126,7 +126,8 @@ function initTheme() {
   document.documentElement.setAttribute('data-theme', theme);
   const themeToggle = document.getElementById('theme-toggle');
   if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
+    themeToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       const current = document.documentElement.getAttribute('data-theme');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
@@ -307,8 +308,8 @@ async function initProduct() {
             ${product.stock > 0 ? `<span class="badge badge-success">In Stock</span>` : `<span class="badge badge-error">Out of Stock</span>`}
           </div>
           <div class="product-price">
-            <span class="price">₦${product.price.toFixed(2)}</span>
-            ${product.original_price ? `<span class="price-old">₦${product.original_price.toFixed(2)}</span>` : ""}
+            <span class="price">GH₵${product.price.toFixed(2)}</span>
+            ${product.original_price ? `<span class="price-old">GH₵${product.original_price.toFixed(2)}</span>` : ""}
             ${discount > 0 ? `<span class="badge badge-warning">Save ${discount}%</span>` : ""}
           </div>
           <p class="product-description">${product.description}</p>
@@ -415,14 +416,14 @@ function renderCartItems() {
       </div>
       <div class="cart-item-info">
         <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">₦${item.price.toFixed(2)} each</div>
+        <div class="cart-item-price">GH₵${item.price.toFixed(2)} each</div>
       </div>
       <div class="cart-item-qty">
         <button onclick="cartQtyChange('${item.id}', -1)">−</button>
         <span>${item.qty}</span>
         <button onclick="cartQtyChange('${item.id}', 1)">+</button>
       </div>
-      <div class="cart-item-subtotal">₦${(item.price * item.qty).toFixed(2)}</div>
+      <div class="cart-item-subtotal">GH₵${(item.price * item.qty).toFixed(2)}</div>
       <button class="btn-danger" onclick="cartRemove('${item.id}')">Remove</button>
     </div>`,
     )
@@ -434,11 +435,11 @@ function renderOrderSummary() {
   const subtotalEl = document.getElementById("summary-subtotal");
   const shippingEl = document.getElementById("summary-shipping");
   const totalEl = document.getElementById("summary-total");
-  if (subtotalEl) subtotalEl.textContent = `₦${subtotal.toFixed(2)}`;
+  if (subtotalEl) subtotalEl.textContent = `GH₵${subtotal.toFixed(2)}`;
   if (shippingEl)
     shippingEl.textContent =
-      shipping === 0 ? "Free" : `₦${shipping.toFixed(2)}`;
-  if (totalEl) totalEl.textContent = `₦${total.toFixed(2)}`;
+      shipping === 0 ? "Free" : `GH₵${shipping.toFixed(2)}`;
+  if (totalEl) totalEl.textContent = `GH₵${total.toFixed(2)}`;
 }
 
 function cartQtyChange(id, delta) {

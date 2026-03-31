@@ -153,7 +153,7 @@
     /* ── Search bar ──────────────────────────────────────── */
     .search-bar { position:relative; }
     .search-bar input { padding-left:2.2rem; }
-    .search-bar::before { content:"ðŸ”"; position:absolute; left:.7rem; top:50%; transform:translateY(-50%); font-size:.85rem; }
+    .search-bar::before { content:"🔍"; position:absolute; left:.7rem; top:50%; transform:translateY(-50%); font-size:.85rem; }
 
     /* ── Modal ───────────────────────────────────────────── */
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:200; backdrop-filter:blur(4px); }
@@ -186,10 +186,10 @@
 
 <!-- Auth guard shown until JS verifies admin -->
 <div id="auth-guard">
-  <div style="font-size:2.5rem">ðŸ”’</div>
+  <div style="font-size:2.5rem">🔒</div>
   <h2>Access Restricted</h2>
-  <p>Checking credentialsâ€¦</p>
-  <a href="auth.html" style="color:var(--accent);text-decoration:none;font-size:.9rem">â†’ Go to Login</a>
+  <p>Checking credentials...</p>
+  <a href="auth.html" style="color:var(--accent);text-decoration:none;font-size:.9rem">→ Go to Login</a>
 </div>
 
 <!-- ── Sidebar ─────────────────────────────────────────── -->
@@ -198,16 +198,16 @@
     Shop<span>Lite</span> <small>Admin Portal</small>
   </div>
   <nav class="sidebar-nav">
-    <div class="nav-item active" data-tab="dashboard"><span class="icon">ðŸ“Š</span> Dashboard</div>
-    <div class="nav-item" data-tab="products"><span class="icon">ðŸ“¦</span> Products</div>
-    <div class="nav-item" data-tab="orders"><span class="icon">ðŸ›ï¸</span> Orders</div>
-    <div class="nav-item" data-tab="messages"><span class="icon">âœ‰ï¸</span> Messages <span class="badge-pill" id="unread-badge" style="display:none">0</span></div>
+    <div class="nav-item active" data-tab="dashboard"><span class="icon">📊</span> Dashboard</div>
+    <div class="nav-item" data-tab="products"><span class="icon">📦</span> Products</div>
+    <div class="nav-item" data-tab="orders"><span class="icon">🛒</span> Orders</div>
+    <div class="nav-item" data-tab="messages"><span class="icon">✉️</span> Messages <span class="badge-pill" id="unread-badge" style="display:none">0</span></div>
     <div class="nav-item" data-tab="users"><span class="icon">👥</span> Users</div>
   </nav>
   <div class="sidebar-footer">
     <strong id="admin-name">Admin</strong>
     <span id="admin-email" style="font-size:.75rem"></span>
-    <button class="logout-btn" onclick="doLogout()">ðŸšª Log Out</button>
+    <button class="logout-btn" onclick="doLogout()">🚪 Log Out</button>
   </div>
 </aside>
 
@@ -235,46 +235,46 @@
       </div>
       <div class="top-grid">
         <div class="card">
-          <div class="card-header"><h3>ðŸ“‹ Recent Orders</h3></div>
+          <div class="card-header"><h3>📋 Recent Orders</h3></div>
           <div class="tbl-wrap">
             <table>
               <thead><tr><th>Ref</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
-              <tbody id="recent-orders-tbody"><tr><td colspan="4" class="loading">Loadingâ€¦</td></tr></tbody>
+              <tbody id="recent-orders-tbody"><tr><td colspan="4" class="loading">Loading...</td></tr></tbody>
             </table>
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><h3>ðŸ† Top Products</h3></div>
+          <div class="card-header"><h3>🏆 Top Products</h3></div>
           <div class="tbl-wrap">
             <table>
               <thead><tr><th>#</th><th>Product</th><th>Units Sold</th></tr></thead>
-              <tbody id="top-products-tbody"><tr><td colspan="3" class="loading">Loadingâ€¦</td></tr></tbody>
+              <tbody id="top-products-tbody"><tr><td colspan="3" class="loading">Loading...</td></tr></tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- â•â• PRODUCTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- 🛍️ PRODUCTS ───────────────────────────────────────── -->
     <div class="tab-panel" id="tab-products">
       <div class="card">
         <div class="card-header">
           <h3>All Products</h3>
           <div style="display:flex;gap:.75rem;flex-wrap:wrap">
-            <div class="search-bar"><input class="form-control" id="prod-search" placeholder="Searchâ€¦" style="width:200px" oninput="filterProducts()"></div>
-            <button class="btn btn-primary" onclick="openProductModal()">ï¼‹ Add Product</button>
+            <div class="search-bar"><input class="form-control" id="prod-search" placeholder="Search..." style="width:200px" oninput="filterProducts()"></div>
+            <button class="btn btn-primary" onclick="openProductModal()">＋ Add Product</button>
           </div>
         </div>
         <div class="tbl-wrap">
           <table>
             <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Actions</th></tr></thead>
-            <tbody id="products-tbody"><tr><td colspan="7" class="loading">Loadingâ€¦</td></tr></tbody>
+            <tbody id="products-tbody"><tr><td colspan="7" class="loading">Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- â•â• ORDERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- 📦 ORDERS ─────────────────────────────────────────── -->
     <div class="tab-panel" id="tab-orders">
       <div class="card">
         <div class="card-header">
@@ -290,13 +290,13 @@
         <div class="tbl-wrap">
           <table>
             <thead><tr><th>Ref</th><th>Customer</th><th>Email</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
-            <tbody id="orders-tbody"><tr><td colspan="7" class="loading">Loadingâ€¦</td></tr></tbody>
+            <tbody id="orders-tbody"><tr><td colspan="7" class="loading">Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- â•â• MESSAGES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- ✉️ MESSAGES ───────────────────────────────────────── -->
     <div class="tab-panel" id="tab-messages">
       <div class="card">
         <div class="card-header">
@@ -312,23 +312,23 @@
         <div class="tbl-wrap">
           <table>
             <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody id="messages-tbody"><tr><td colspan="6" class="loading">Loadingâ€¦</td></tr></tbody>
+            <tbody id="messages-tbody"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- â•â• USERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <!-- 👥 USERS ────────────────────────────────────────────── -->
     <div class="tab-panel" id="tab-users">
       <div class="card">
         <div class="card-header">
           <h3>All Users</h3>
-          <div class="search-bar"><input class="form-control" id="user-search" placeholder="Searchâ€¦" style="width:220px" oninput="loadUsers()"></div>
+          <div class="search-bar"><input class="form-control" id="user-search" placeholder="Search..." style="width:220px" oninput="loadUsers()"></div>
         </div>
         <div class="tbl-wrap">
           <table>
             <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Action</th></tr></thead>
-            <tbody id="users-tbody"><tr><td colspan="6" class="loading">Loadingâ€¦</td></tr></tbody>
+            <tbody id="users-tbody"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -347,28 +347,28 @@
       <div class="form-group">
         <label>Category *</label>
         <select class="form-control" id="p-cat">
-          <option value="">Selectâ€¦</option>
+          <option value="">Select...</option>
           <option value="electronics">Electronics</option><option value="clothing">Clothing</option>
           <option value="home">Home</option><option value="accessories">Accessories</option>
         </select>
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Price (â‚µ) *</label><input class="form-control" id="p-price" type="number" step="0.01" min="0"></div>
-      <div class="form-group"><label>Original Price (â‚µ)</label><input class="form-control" id="p-original" type="number" step="0.01" min="0"></div>
+      <div class="form-group"><label>Price (GH₵) *</label><input class="form-control" id="p-price" type="number" step="0.01" min="0"></div>
+      <div class="form-group"><label>Original Price (GH₵)</label><input class="form-control" id="p-original" type="number" step="0.01" min="0"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>Stock *</label><input class="form-control" id="p-stock" type="number" min="0"></div>
       <div class="form-group"><label>Image path</label><input class="form-control" id="p-image" placeholder="images/product.jpg"></div>
     </div>
-    <div class="form-group"><label>Description</label><textarea class="form-control" id="p-desc" rows="3" placeholder="Product descriptionâ€¦"></textarea></div>
+    <div class="form-group"><label>Description</label><textarea class="form-control" id="p-desc" rows="3" placeholder="Product description..."></textarea></div>
     <div class="form-group" style="flex-direction:row;align-items:center;gap:.5rem">
       <input type="checkbox" id="p-featured" style="width:16px;height:16px;cursor:pointer">
       <label for="p-featured" style="cursor:pointer;margin-bottom:0">Featured product</label>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeProductModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveProduct()">ðŸ’¾ Save Product</button>
+      <button class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
     </div>
   </div>
 </div>
@@ -376,7 +376,7 @@
 <!-- ── Message Detail Modal ───────────────────────────── -->
 <div class="modal-overlay" id="msg-modal">
   <div class="modal-box">
-    <h2>ðŸ“¨ Message Detail</h2>
+    <h2>📨 Message Detail</h2>
     <div style="margin-bottom:1rem;color:var(--muted);font-size:.85rem">
       <div><strong style="color:var(--text)" id="msg-from"></strong> — <span id="msg-email2"></span></div>
       <div style="margin-top:.25rem" id="msg-date2"></div>
@@ -401,8 +401,8 @@ let currentUser = null;
 
 /* ── Auth guard ──────────────────────────────────────── */
 (function() {
-  const token = localStorage.getItem("sl_token");
-  const user  = JSON.parse(localStorage.getItem("sl_user") || "null");
+  const token = localStorage.getItem("shopLiteToken");
+  const user  = JSON.parse(localStorage.getItem("shopLiteSession") || "null");
   if (!token || !user || user.role !== "admin") {
     document.getElementById("auth-guard").querySelector("p").textContent =
       "You must be logged in as an admin.";
@@ -419,7 +419,7 @@ let currentUser = null;
 
 /* ── Core fetch ──────────────────────────────────────── */
 async function api(path, opts = {}) {
-  const token = localStorage.getItem("sl_token");
+  const token = localStorage.getItem("shopLiteToken");
   const res   = await fetch(API + path, {
     ...opts,
     headers: { "Content-Type":"application/json", "Authorization":`Bearer ${token}`, ...(opts.headers||{}) }
@@ -435,6 +435,7 @@ function initAdmin() {
   updateClock();
   setInterval(updateClock, 30000);
   loadDashboard();
+  initTheme();
 }
 
 function updateClock() {
@@ -459,6 +460,21 @@ function switchTab(tab) {
   if (tab==="users")    loadUsers();
 }
 
+/* ── Theme ───────────────────────────────────────────── */
+function initTheme() {
+  const theme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  const toggle = document.getElementById('theme-toggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  }
+}
+
 /* ── Toast ───────────────────────────────────────────── */
 function toast(msg, type="success") {
   const c = document.getElementById("toast-container");
@@ -470,11 +486,11 @@ function toast(msg, type="success") {
   setTimeout(() => { t.classList.remove("show"); setTimeout(()=>t.remove(),350); }, 3200);
 }
 
-function fmt(v) { return `â‚µ${parseFloat(v).toFixed(2)}`; }
+function fmt(v) { return `GH₵${parseFloat(v).toFixed(2)}`; }
 function fmtDate(d) { return new Date(d).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}); }
 function statusBadge(s) { return `<span class="badge badge-${s}">${s}</span>`; }
 
-/* â•â• DASHBOARD â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* 📊 DASHBOARD ────────────────────────────────────────── */
 async function loadDashboard() {
   try {
     const d = await api("/admin/stats");
@@ -486,7 +502,7 @@ async function loadDashboard() {
       <div class="stat-card"><div class="sc-label">Customers</div><div class="sc-value">${s.totalUsers}</div><div class="sc-sub">Registered users</div></div>
       <div class="stat-card"><div class="sc-label">Products</div><div class="sc-value">${s.totalProducts}</div><div class="sc-sub">In catalogue</div></div>
       <div class="stat-card"><div class="sc-label">Unread Messages</div><div class="sc-value sc-yellow">${s.unreadMessages}</div><div class="sc-sub">Contact inbox</div></div>
-      <div class="stat-card"><div class="sc-label">Low Stock</div><div class="sc-value sc-red">${s.lowStock}</div><div class="sc-sub">â‰¤ 5 units left</div></div>
+      <div class="stat-card"><div class="sc-label">Low Stock</div><div class="sc-value sc-red">${s.lowStock}</div><div class="sc-sub">≤ 5 units left</div></div>
     `;
 
     // Unread badge on sidebar
@@ -517,9 +533,9 @@ async function loadDashboard() {
   } catch(e) { toast("Failed to load dashboard: " + e.message, "error"); }
 }
 
-/* â•â• PRODUCTS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* 📦 PRODUCTS ─────────────────────────────────────────── */
 async function loadProducts() {
-  document.getElementById("products-tbody").innerHTML = `<tr><td colspan="7" class="loading">Loadingâ€¦</td></tr>`;
+  document.getElementById("products-tbody").innerHTML = `<tr><td colspan="7" class="loading">Loading...</td></tr>`;
   try {
     const d = await api("/products");
     allProducts = d.products;
@@ -542,13 +558,13 @@ function renderProducts(list) {
         <td><span class="badge badge-processing">${p.category}</span></td>
         <td>${fmt(p.price)}</td>
         <td style="color:${p.stock<=5?'var(--red)':p.stock<=15?'var(--yellow)':'var(--green)'}">${p.stock}</td>
-        <td>${p.featured ? "â­" : "—"}</td>
+        <td>${p.featured ? "⭐" : "—"}</td>
         <td style="display:flex;gap:.4rem">
-          <button class="btn btn-ghost btn-sm" onclick='openProductModal(${JSON.stringify(p)})'>âœï¸ Edit</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">ðŸ—‘ï¸</button>
+          <button class="btn btn-ghost btn-sm" onclick='openProductModal(${JSON.stringify(p)})'>✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">🗑️</button>
         </td>
       </tr>`).join("")
-    : `<tr><td colspan="7"><div class="empty-state"><div class="es-icon">ðŸ“¦</div>No products found</div></td></tr>`;
+    : `<tr><td colspan="7"><div class="empty-state"><div class="es-icon">📦</div>No products found</div></td></tr>`;
 }
 
 function openProductModal(p = null) {
@@ -594,9 +610,9 @@ async function deleteProduct(id) {
   catch(e) { toast(e.message, "error"); }
 }
 
-/* â•â• ORDERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* 🛒 ORDERS ────────────────────────────────────────────── */
 async function loadOrders() {
-  document.getElementById("orders-tbody").innerHTML = `<tr><td colspan="7" class="loading">Loadingâ€¦</td></tr>`;
+  document.getElementById("orders-tbody").innerHTML = `<tr><td colspan="7" class="loading">Loading...</td></tr>`;
   const status = document.getElementById("order-status-filter").value;
   const qs = status ? `status=${status}` : "";
   try {
@@ -618,7 +634,7 @@ async function loadOrders() {
             </select>
           </td>
         </tr>`).join("")
-      : `<tr><td colspan="7"><div class="empty-state"><div class="es-icon">ðŸ›ï¸</div>No orders found</div></td></tr>`;
+      : `<tr><td colspan="7"><div class="empty-state"><div class="es-icon">🛒</div>No orders found</div></td></tr>`;
   } catch(e) { toast("Failed to load orders", "error"); }
 }
 
@@ -627,9 +643,9 @@ async function updateOrderStatus(id, status) {
   catch(e) { toast(e.message, "error"); loadOrders(); }
 }
 
-/* â•â• MESSAGES â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* ✉️ MESSAGES ───────────────────────────────────────────── */
 async function loadMessages() {
-  document.getElementById("messages-tbody").innerHTML = `<tr><td colspan="6" class="loading">Loadingâ€¦</td></tr>`;
+  document.getElementById("messages-tbody").innerHTML = `<tr><td colspan="6" class="loading">Loading...</td></tr>`;
   const filter  = document.getElementById("msg-filter").value;
   const qs = filter !== "" ? `is_read=${filter}` : "";
   try {
@@ -646,12 +662,12 @@ async function loadMessages() {
           <td style="color:var(--muted)">${fmtDate(m.created_at)}</td>
           <td><span class="badge ${m.is_read?'badge-read':'badge-unread'}">${m.is_read?'Read':'Unread'}</span></td>
           <td style="display:flex;gap:.4rem">
-            <button class="btn btn-ghost btn-sm" onclick="viewMessage(${m.id},'${encodeURIComponent(m.full_name)}','${encodeURIComponent(m.email)}','${encodeURIComponent(m.subject)}','${encodeURIComponent(m.message)}','${m.created_at}')">ðŸ‘ï¸ View</button>
+            <button class="btn btn-ghost btn-sm" onclick="viewMessage(${m.id},'${encodeURIComponent(m.full_name)}','${encodeURIComponent(m.email)}','${encodeURIComponent(m.subject)}','${encodeURIComponent(m.message)}','${m.created_at}')">👁️ View</button>
             ${!m.is_read?`<button class="btn btn-ghost btn-sm" onclick="markRead(${m.id})">✅</button>`:''}
-            <button class="btn btn-danger btn-sm" onclick="deleteMsg(${m.id})">ðŸ—‘ï¸</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteMsg(${m.id})">🗑️</button>
           </td>
         </tr>`).join("")
-      : `<tr><td colspan="6"><div class="empty-state"><div class="es-icon">âœ‰ï¸</div>No messages</div></td></tr>`;
+      : `<tr><td colspan="6"><div class="empty-state"><div class="es-icon">✉️</div>No messages</div></td></tr>`;
   } catch(e) { toast("Failed to load messages", "error"); }
 }
 
@@ -676,9 +692,9 @@ async function deleteMsg(id) {
   catch(e) { toast(e.message, "error"); }
 }
 
-/* â•â• USERS â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* 👥 USERS ──────────────────────────────────────────────── */
 async function loadUsers() {
-  document.getElementById("users-tbody").innerHTML = `<tr><td colspan="6" class="loading">Loadingâ€¦</td></tr>`;
+  document.getElementById("users-tbody").innerHTML = `<tr><td colspan="6" class="loading">Loading...</td></tr>`;
   const search = document.getElementById("user-search").value;
   const qs = search ? `search=${encodeURIComponent(search)}` : "";
   try {
@@ -712,7 +728,7 @@ async function toggleRole(id, currentRole) {
 /* ── Logout ──────────────────────────────────────────── */
 function doLogout() {
   if (confirm("Log out of admin portal?")) {
-    ["sl_token","sl_user","shopLiteSession"].forEach(k => localStorage.removeItem(k));
+    ["shopLiteToken","shopLiteSession"].forEach(k => localStorage.removeItem(k));
     window.location.href = "auth.html";
   }
 }
