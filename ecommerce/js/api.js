@@ -10,7 +10,7 @@ const Auth = {
   save(token, user) {
     localStorage.setItem("sl_token", token);
     localStorage.setItem("sl_user", JSON.stringify(user));
-    localStorage.setItem("shopLiteSession", JSON.stringify({ username: user.username, email: user.email }));
+    localStorage.setItem("shopLiteSession", JSON.stringify({ username: user.username, email: user.email, role: user.role }));
   },
 
   clear() {
@@ -30,10 +30,10 @@ async function apiFetch(endpoint, options = {}) {
 
 // ── Auth API ─────────────────────────────────────────────
 const AuthAPI = {
-  async register({ username, email, password }) {
+  async register({ username, email, password, role, adminCode }) {
     const data = await apiFetch("/auth/register", {
       method: "POST",
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, role, adminCode }),
     });
     Auth.save(data.token, data.user);
     return data;
@@ -114,7 +114,7 @@ function showLogoutModal() {
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
-        <div class="logout-modal-icon">ðŸ‘‹</div>
+        <div class="logout-modal-icon">👋</div>
         <h3 class="logout-modal-title">Leaving So Soon?</h3>
         <p class="logout-modal-msg">Are you sure you want to log out of ShopLite? We'll miss you!</p>
         <div class="logout-modal-actions">
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 1. Update Profile/Logout Link
     if (loginLink) {
-      loginLink.textContent = `ðŸ‘¤ ${user.username}`;
+      loginLink.textContent = `👤 ${user.username}`;
       loginLink.href = "#";
       loginLink.title = "Click to log out";
       loginLink.addEventListener("click", e => {
@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const a = document.createElement("a");
       a.href = "orders.html";
       a.className = "mobile-orders-link";
-      a.textContent = "ðŸ“‘ My Orders";
+      a.textContent = "📋 My Orders";
       mobileMenu.appendChild(a);
     }
   }
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const nav = document.querySelector(".nav-links");
     if (nav && !document.querySelector(".nav-admin-link")) {
       const li = document.createElement("li");
-      li.innerHTML = `<a href="admin.html" class="nav-admin-link" style="color:var(--clr-accent)">âš™ï¸ Admin</a>`;
+      li.innerHTML = `<a href="admin.html" class="nav-admin-link" style="color:var(--clr-accent)">⚙️ Admin</a>`;
       nav.appendChild(li);
     }
   }
