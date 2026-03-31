@@ -35,7 +35,9 @@ function initMiniCart() {
   const overlay = document.getElementById("cart-overlay");
   const drawer = document.getElementById("cart-drawer");
   const closeBtn = document.getElementById("drawer-close");
-  const cartBtn = document.querySelector(".nav-cart-btn");
+  
+  // Find all cart links (navbar and mobile menu)
+  const cartLinks = document.querySelectorAll('a.nav-cart-btn[href="cart.html"], .mobile-menu a[href="cart.html"]');
 
   if (closeBtn) {
     closeBtn.addEventListener("click", closeDrawer);
@@ -43,16 +45,25 @@ function initMiniCart() {
   if (overlay) {
     overlay.addEventListener("click", closeDrawer);
   }
-  if (cartBtn) {
-    cartBtn.addEventListener("click", (e) => {
+  
+  cartLinks.forEach(cartLink => {
+    cartLink.addEventListener("click", (e) => {
       // Don't redirect if we want to show drawer
       // But only if we're not on the cart page itself
       if (document.body.dataset.page !== "cart") {
         e.preventDefault();
         openDrawer();
+        
+        // Also close mobile menu if it was clicked from there
+        const mobileMenu = document.getElementById("mobile-menu");
+        const hamburger = document.getElementById("hamburger");
+        if (mobileMenu && mobileMenu.classList.contains("active")) {
+          mobileMenu.classList.remove("active");
+          hamburger.classList.remove("active");
+        }
       }
     });
-  }
+  });
 }
 
 function openDrawer() {

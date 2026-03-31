@@ -450,7 +450,7 @@
 
       @media (max-width: 520px) {
         .auth-card {
-          padding: 2rem 1.5rem;
+          padding: 2.25rem 1.25rem 1.75rem;
         }
         .social-btns {
           grid-template-columns: 1fr;
@@ -458,17 +458,25 @@
         .back-link {
           position: static;
           display: inline-flex;
-          margin-bottom: 1.25rem;
+          margin-bottom: 2rem;
+          width: 100%;
+          justify-content: center;
         }
         .theme-btn {
           position: absolute;
-          top: 1rem;
-          right: 1rem;
+          top: 0.75rem;
+          right: 0.75rem;
+          width: 36px;
+          height: 36px;
         }
         .auth-page {
           align-items: flex-start;
-          padding-top: 1.5rem;
+          padding: 1rem;
         }
+        .role-cards {
+          grid-template-columns: 1fr;
+        }
+        .auth-brand a { font-size: 1.5rem; }
       }
 
       /* ── Role Picker ── */

@@ -176,36 +176,14 @@
       </section>
 
       <!-- PROMO BANNER -->
-      <section
-        class="section-narrow"
-        style="
-          background: var(--clr-surface);
-          border-top: 1px solid var(--clr-border);
-          border-bottom: 1px solid var(--clr-border);
-        "
-      >
-        <div
-          class="container"
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            flex-wrap: wrap;
-          "
-        >
+      <section class="section-narrow promo-banner">
+        <div class="container promo-banner-inner">
           <div>
-            <h2
-              style="
-                font-family: var(--font-head);
-                font-size: clamp(1.4rem, 3vw, 2rem);
-                font-weight: 800;
-              "
-            >
+            <h2 class="promo-title">
               Free Shipping on Orders
-              <span style="color: var(--clr-accent)">Over $50</span>
+              <span class="accent">Over $50</span>
             </h2>
-            <p style="color: var(--clr-text-muted); margin-top: 0.35rem">
+            <p class="promo-sub">
               Shop more, save more — it's that simple.
             </p>
           </div>
@@ -221,13 +199,7 @@
             <div class="divider"></div>
             <p>Explore our curated product categories</p>
           </div>
-          <div
-            style="
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              gap: 1rem;
-            "
-          >
+          <div class="categories-grid">
             <a
               href="shop.html?cat=electronics"
               class="category-card"
@@ -381,7 +353,6 @@
       </div>
       <div class="footer-bottom">
         <span>© 2026 <span>ShopLite</span> — Group 63 Project</span>
-        <span>Built with HTML, CSS & JavaScript ❤️</span>
       </div>
     </footer>
     <script src="js/api.js"></script>

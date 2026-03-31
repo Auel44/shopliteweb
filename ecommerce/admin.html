@@ -138,6 +138,18 @@
     .btn-ghost:hover { color:var(--text); background:rgba(255,255,255,.1); }
     .btn-sm { padding:.28rem .65rem; font-size:.75rem; }
 
+    /* ── Responsive Table ───────────────────────────────── */
+    .tbl-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .tbl-wrap table { min-width: 700px; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+
     /* ── Form controls ───────────────────────────────────── */
     .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
     .form-group { display:flex; flex-direction:column; gap:.35rem; margin-bottom:.9rem; }
@@ -271,6 +283,43 @@
       cursor: pointer; transition: all 0.18s; border: none;
     }
     .modal-close:hover { background: var(--border); color: var(--text); }
+
+    /* ── Mobile Responsiveness ──────────────────────────── */
+    .sidebar-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 95; display: none; backdrop-filter: blur(2px);
+    }
+    .mobile-toggle {
+      display: none; background: none; border: none; color: var(--text);
+      font-size: 1.25rem; cursor: pointer; padding: 0.25rem;
+    }
+    .sidebar-close {
+      display: none; position: absolute; right: 1rem; top: 1.25rem;
+      background: none; border: none; color: var(--muted);
+      font-size: 1.2rem; cursor: pointer;
+    }
+
+    @media (max-width: 991px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar {
+        left: -240px; width: 240px; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.3);
+      }
+      .sidebar.open { left: 0; }
+      .sidebar.open + .sidebar-overlay { display: block; }
+      .main { margin-left: 0; }
+      .mobile-toggle { display: block; }
+      .sidebar-close { display: block; }
+      .topbar { padding: 0.75rem 1rem; }
+      .content { padding: 1rem; }
+      .top-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .logout-modal-actions { flex-direction: column; }
+      .modal-box { padding: 1.5rem 1rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -283,8 +332,12 @@
   <a href="auth.html" style="color:var(--accent);text-decoration:none;font-size:.9rem">→ Go to Login</a>
 </div>
 
+<!-- ── Sidebar Overlay (Mobile) ───────────────────────── -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
 <!-- ── Sidebar ─────────────────────────────────────────── -->
 <aside class="sidebar" id="sidebar" style="display:none">
+  <button class="sidebar-close" id="sidebar-close-btn">&times;</button>
   <div class="sidebar-brand">
     Shop<span>Lite</span> <small>Admin Portal</small>
   </div>
@@ -305,7 +358,10 @@
 <!-- ── Main ────────────────────────────────────────────── -->
 <div class="main" id="main-content" style="display:none">
   <div class="topbar">
-    <h1 id="topbar-title">Dashboard</h1>
+    <div style="display:flex; align-items:center; gap:0.75rem">
+      <button class="mobile-toggle" id="mobile-toggle-btn">☰</button>
+      <h1 id="topbar-title">Dashboard</h1>
+    </div>
     <div class="topbar-right">
       <!-- Theme Toggle Button -->
       <button id="theme-toggle" class="btn btn-ghost btn-sm" title="Toggle Theme" style="padding: 0.35rem; margin-right: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border);">
@@ -870,6 +926,28 @@ function doLogout() {
   confirmBtn.addEventListener('click', () => {
     ["shopLiteToken", "shopLiteSession", "sl_token", "sl_user", "g63_cart"].forEach(k => localStorage.removeItem(k));
     window.location.href = "auth.html";
+  });
+})();
+
+/* ── Mobile Sidebar Toggle Logic ────────────────────── */
+(function setupMobileSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const toggleBtn = document.getElementById('mobile-toggle-btn');
+  const closeBtn = document.getElementById('sidebar-close-btn');
+
+  const openSidebar = () => sidebar.classList.add('open');
+  const closeSidebar = () => sidebar.classList.remove('open');
+
+  if (toggleBtn) toggleBtn.addEventListener('click', openSidebar);
+  if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+  if (overlay) overlay.addEventListener('click', closeSidebar);
+
+  // Close sidebar when clicking a nav item (on mobile)
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth < 992) closeSidebar();
+    });
   });
 })();
 </script>
