@@ -124,7 +124,7 @@ function buildProductCard(product) {
     <div class="product-card" data-id="${product.id}">
       <a href="product.html?id=${product.id}" class="card-img-link">
         <div class="card-img-wrap">
-          <img src="${product.image}" alt="${product.name}" onerror="this.src='images/placeholder.jpg'">
+          <img src="${product.image}" alt="${product.name}" onerror="this.src='images/hero.jpg'">
           ${discount > 0 ? `<span class="badge-discount">-${discount}%</span>` : ""}
         </div>
       </a>

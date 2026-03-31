@@ -159,7 +159,7 @@ function handleGlobalErrors() {
 /** Image Error Handling Helper **/
 function handleImageError(img) {
   img.onerror = null; 
-  img.src = 'images/placeholder.jpg';
+  img.src = 'images/hero.jpg';
 }
 
 async function logout() {
